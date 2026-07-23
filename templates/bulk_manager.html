@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gophish-Support</title>
+  <style>
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --surface2: #1a1a1a;
+      --border: #2e2e2e;
+      --gold: #d4af37;
+      --gold-light: #f0d875;
+      --gold-dim: #9a7b1a;
+      --text: #ffffff;
+      --muted: #b0b0b0;
+      --danger: #ff6b6b;
+      --success: #6ee7a0;
+      --radius: 10px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.45);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.45;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 20% 0%, rgba(212,175,55,0.08), transparent 45%),
+                  radial-gradient(circle at 90% 80%, rgba(212,175,55,0.05), transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 24px 20px 60px; }
+
+    header {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-logo {
+      height: 58px;
+      width: auto;
+      max-width: 240px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-text h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    .brand-text h1 span {
+      color: var(--gold-light);
+    }
+
+    .brand-text p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 4px;
+    }
+
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
+      border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--surface2);
+      border: 1px solid var(--border); transition: border-color 0.25s, box-shadow 0.25s;
+    }
+    .status-pill.connected { border-color: var(--gold-dim); color: var(--gold-light); box-shadow: 0 0 20px rgba(212,175,55,0.15); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
+    .status-pill:not(.connected) .status-dot { background: #555; animation: none; }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tab {
+      padding: 10px 16px; border-radius: var(--radius); font-size: 0.85rem; font-weight: 700;
+      cursor: pointer; border: 1px solid var(--border); background: var(--surface);
+      color: var(--muted); transition: all 0.2s ease;
+    }
+    .tab:hover { color: var(--text); border-color: var(--gold-dim); transform: translateY(-1px); }
+    .tab.active {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      color: #111; border-color: var(--gold); box-shadow: 0 4px 16px rgba(212,175,55,0.35);
+    }
+
+    .tab-content { display: none; animation: slideIn 0.3s ease; }
+    .tab-content.active { display: block; }
+    @keyframes slideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    h2 { font-size: 1.25rem; color: var(--gold-light); margin-bottom: 14px; font-weight: 700; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); transition: border-color 0.2s;
+    }
+    .card:hover { border-color: rgba(212,175,55,0.25); }
+
+    .toolbar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      margin-bottom: 14px; padding: 12px; background: var(--surface2);
+      border-radius: var(--radius); border: 1px solid var(--border);
+    }
+
+    .toolbar label { font-size: 0.75rem; color: var(--gold); font-weight: 700; text-transform: uppercase; margin-right: 4px; }
+
+    select, input[type="text"], input[type="url"], input[type="password"] {
+      padding: 9px 12px; background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-family: Arial, Helvetica, sans-serif; font-size: 0.9rem;
+    }
+    select:focus, input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212,175,55,0.25); }
+
+    .filter-group { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-btn {
+      padding: 7px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700; cursor: pointer;
+      border: 1px solid var(--border); background: var(--bg); color: var(--muted); transition: all 0.2s;
+    }
+    .filter-btn:hover { color: var(--text); border-color: var(--gold-dim); }
+    .filter-btn.active { background: var(--gold); color: #111; border-color: var(--gold); }
+
+    .btn {
+      padding: 9px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      border: none; font-family: Arial, Helvetica, sans-serif; transition: transform 0.15s, filter 0.15s;
+    }
+    .btn:hover { filter: brightness(1.1); }
+    .btn:active { transform: scale(0.97); }
+    .btn-gold { background: linear-gradient(135deg, var(--gold-light), var(--gold)); color: #111; }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-danger { background: transparent; color: var(--danger); border: 1px solid rgba(255,107,107,0.5); }
+    .btn-danger:hover { background: rgba(255,107,107,0.12); }
+
+    .info {
+      padding: 12px 14px; background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25);
+      border-radius: 8px; color: var(--muted); font-size: 0.88rem; margin-bottom: 14px;
+    }
+    .info strong, .info code { color: var(--gold-light); }
+    .info code { background: var(--bg); padding: 2px 6px; border-radius: 4px; }
+
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    th {
+      background: var(--surface2); color: var(--gold); font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.04em; position: sticky; top: 0;
+    }
+    tr.data-row { transition: background 0.15s; }
+    tr.data-row:hover td { background: rgba(212,175,55,0.06); }
+    tr.data-row.hidden { display: none; }
+    tr:last-child td { border-bottom: none; }
+    .badge {
+      display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 0.72rem;
+      font-weight: 700; background: rgba(212,175,55,0.15); color: var(--gold-light);
+      border: 1px solid rgba(212,175,55,0.3);
+    }
+    .badge.users-high { color: var(--gold-light); }
+    .badge.users-low { color: var(--muted); }
+
+    input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--gold); cursor: pointer; }
+
+    .file-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px;
+    }
+    .file-card {
+      display: flex; align-items: flex-start; gap: 10px; padding: 12px;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+    }
+    .file-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
+    .file-card.selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+    .file-card .meta { flex: 1; }
+    .file-card .name { font-weight: 700; color: var(--text); font-size: 0.9rem; word-break: break-all; }
+    .file-card .users { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+
+    .flashes { margin-bottom: 16px; }
+    .flash {
+      padding: 11px 14px; border-radius: 8px; margin-bottom: 8px; font-size: 0.88rem;
+      border: 1px solid var(--border); animation: slideIn 0.3s ease;
+    }
+    .flash.success { background: rgba(110,231,160,0.1); border-color: rgba(110,231,160,0.35); color: var(--success); }
+    .flash.error { background: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.35); color: var(--danger); }
+    .flash.warning { background: rgba(212,175,55,0.12); border-color: rgba(212,175,55,0.35); color: var(--gold-light); }
+
+    .field-label {
+      display: block; font-size: 0.72rem; font-weight: 700; color: var(--gold);
+      text-transform: uppercase; margin-bottom: 6px;
+    }
+    .field-hint { font-size: 0.8rem; color: var(--muted); margin: -8px 0 14px; }
+    .field-input { width: 100%; margin-bottom: 14px; }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; color: var(--muted); font-size: 0.88rem; }
+
+    /* Progress modal */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+      display: none; align-items: center; justify-content: center; z-index: 1000;
+      padding: 20px; animation: fadeBg 0.2s ease;
+    }
+    .modal-backdrop.open { display: flex; }
+    @keyframes fadeBg { from { opacity: 0; } to { opacity: 1; } }
+
+    .modal {
+      width: 100%; max-width: 480px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6); animation: popIn 0.25s ease;
+    }
+    @keyframes popIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    .modal h3 { color: var(--gold-light); font-size: 1.1rem; margin-bottom: 8px; }
+    .modal .sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 16px; }
+
+    .progress-track {
+      height: 8px; background: var(--bg); border-radius: 999px; overflow: hidden;
+      border: 1px solid var(--border); margin-bottom: 10px;
+    }
+    .progress-fill {
+      height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 999px; transition: width 0.25s ease;
+    }
+    .progress-fill.indeterminate {
+      width: 40% !important; animation: indeterminate 1.2s ease-in-out infinite;
+    }
+    @keyframes indeterminate {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+
+    .progress-text { font-size: 0.85rem; color: var(--muted); margin-bottom: 12px; }
+    .progress-log {
+      max-height: 160px; overflow-y: auto; font-size: 0.8rem; color: var(--muted);
+      background: var(--bg); border-radius: 8px; padding: 10px; border: 1px solid var(--border);
+      display: none;
+    }
+    .progress-log.visible { display: block; }
+    .progress-log .ok { color: var(--success); }
+    .progress-log .fail { color: var(--danger); }
+
+    .modal-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 8px; }
+    .modal-actions .btn { display: none; }
+    .modal-actions .btn.show { display: inline-flex; }
+
+    .count-pill {
+      margin-left: auto; font-size: 0.8rem; color: var(--muted); font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <img
+          class="brand-logo"
+          src="{{ url_for('static', filename='images/ab-inbev-logo.png') }}"
+          alt="AB InBev"
+        />
+        <div class="brand-text">
+          <h1><span>Gophish</span>-Support</h1>
+          <p>Campaign Delete · Delete Userbase · Upload User base</p>
+        </div>
+      </div>
+      <div class="status-pill {% if configured %}connected{% endif %}" id="statusPill">
+        <span class="status-dot"></span>
+        <span id="statusText">{% if configured %}Connected · {{ gophish_url }}{% else %}Not connected{% endif %}</span>
+      </div>
+    </header>
+
+    <div class="flashes" id="flashArea">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+    </div>
+
+    <nav class="tabs">
+      <button type="button" class="tab {% if active_tab == 'settings' %}active{% endif %}" data-tab="settings">Settings</button>
+      <button type="button" class="tab {% if active_tab == 'campaigns' %}active{% endif %}" data-tab="campaigns">Campaign Delete</button>
+      <button type="button" class="tab {% if active_tab == 'userlists' %}active{% endif %}" data-tab="userlists">Delete Userbase</button>
+      <button type="button" class="tab {% if active_tab == 'upload' %}active{% endif %}" data-tab="upload">Upload User base</button>
+    </nav>
+
+    <!-- Settings -->
+    <section id="settings" class="tab-content {% if active_tab == 'settings' %}active{% endif %}">
+      <h2>Connection</h2>
+      <div class="card">
+        <form id="settingsForm">
+          <span class="field-label">Gophish URL</span>
+          <input class="field-input" type="url" id="gophish_url" name="gophish_url" value="{{ gophish_url }}" placeholder="https://127.0.0.1:3333" required />
+          <span class="field-label">API key</span>
+          <input class="field-input" type="password" id="gophish_api_key" name="gophish_api_key"
+            placeholder="{% if configured %}Leave blank to keep current{% else %}From Gophish Settings{% endif %}" />
+          {% if configured %}<p class="field-hint">Current: {{ api_key_masked }}</p>{% endif %}
+          <div class="checkbox-row">
+            <input type="checkbox" id="save_env" name="save_env" checked />
+            <label for="save_env">Save to prod/.env</label>
+          </div>
+          <button type="submit" class="btn btn-gold">Save &amp; test connection</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Campaigns -->
+    <section id="campaigns" class="tab-content {% if active_tab == 'campaigns' %}active{% endif %}">
+      <h2>Campaign Delete</h2>
+      {% if not configured %}
+        <div class="empty-state"><p>Connect in <strong style="color:var(--gold-light)">Settings</strong> first.</p></div>
+      {% elif campaigns %}
+        <div class="toolbar">
+          <label for="campaignSort">Sort</label>
+          <select id="campaignSort">
+            <option value="name-asc">Name A→Z</option>
+            <option value="name-desc">Name Z→A</option>
+            <option value="id-desc">ID (newest)</option>
+            <option value="id-asc">ID (oldest)</option>
+            <option value="status-asc">Status</option>
+          </select>
+          <button type="button" class="btn btn-ghost" onclick="selectVisible('campaign')">Select visible</button>
+          <button type="button" class="btn btn-ghost" onclick="deselectAll('campaign')">Clear</button>
+          <button type="button" class="btn btn-danger" id="btnDeleteCampaigns">Delete selected</button>
+          <span class="count-pill" id="campaignCount">{{ campaigns|length }} total</span>
+        </div>
+        <div class="table-wrap">
+          <table id="campaignTable">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllCampaigns" /></th>
+                <th>ID</th><th>Name</th><th>Status</th><th>Created</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in campaigns %}
+              <tr class="data-row campaign-row" data-id="{{ c.id }}" data-name="{{ c.name|lower }}" data-status="{{ c.status|lower }}" data-created="{{ c.created_date }}">
+                <td><input type="checkbox" class="campaign-checkbox" value="{{ c.id }}" /></td>
+                <td>{{ c.id }}</td>
+                <td>{{ c.name }}</td>
+                <td><span class="badge">{{ c.status }}</span></td>
+                <td>{{ c.created_date }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state"><p>No campaigns found.</p></div>
+      {% endif %}
+    </section>
+
+    <!-- Userlists -->
+    <section id="userlists" class="tab-content {% if active_tab == 'userlists' %}active{% endif %}">
+      <h2>Delete Userbase</h2>
+      {% if not configured %}
+        <div class="empty-state"><p>Connect in Settings first.</p></div>
+      {% elif userlists %}
+        <div class="toolbar">
+          <label for="userlistSort">Sort</label>
+          <select id="userlistSort">
+            <option value="name-asc">Name A→Z</option>
+            <option value="name-desc">Name Z→A</option>
+            <option value="users-desc">Users (high→low)</option>
+            <option value="users-asc">Users (low→high)</option>
+            <option value="id-desc">ID (newest)</option>
+            <option value="modified-desc">Modified (newest)</option>
+          </select>
+          <span style="color:var(--muted);font-size:0.8rem;">Filter:</span>
+          <div class="filter-group" id="userlistFilters">
+            <button type="button" class="filter-btn active" data-filter="all">All</button>
+            <button type="button" class="filter-btn" data-filter="plus50">50+ users</button>
+            <button type="button" class="filter-btn" data-filter="under50">Under 50</button>
+          </div>
+          <button type="button" class="btn btn-ghost" onclick="selectVisible('userlist')">Select visible</button>
+          <button type="button" class="btn btn-ghost" onclick="deselectAll('userlist')">Clear</button>
+          <button type="button" class="btn btn-danger" id="btnDeleteUserlists">Delete selected</button>
+          <span class="count-pill" id="userlistCount"></span>
+        </div>
+        <div class="table-wrap">
+          <table id="userlistTable">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllUserlists" /></th>
+                <th>ID</th><th>Name</th><th>Users</th><th>Modified</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for u in userlists %}
+              <tr class="data-row userlist-row"
+                  data-id="{{ u.id }}"
+                  data-name="{{ u.name|lower }}"
+                  data-users="{{ u.num_users }}"
+                  data-modified="{{ u.modified_date }}">
+                <td><input type="checkbox" class="userlist-checkbox" value="{{ u.id }}" /></td>
+                <td>{{ u.id }}</td>
+                <td>{{ u.name }}</td>
+                <td>
+                  <span class="badge {% if u.num_users >= 50 %}users-high{% else %}users-low{% endif %}">
+                    {{ u.num_users }}
+                  </span>
+                </td>
+                <td>{{ u.modified_date }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="empty-state"><p>No userlists found.</p></div>
+      {% endif %}
+    </section>
+
+    <!-- Upload -->
+    <section id="upload" class="tab-content {% if active_tab == 'upload' %}active{% endif %}">
+      <h2>Upload User base</h2>
+      {% if not configured %}
+        <div class="empty-state"><p>Connect in Settings first.</p></div>
+      {% elif input_files %}
+        <div class="info">
+          Select CSV files from <code>{{ input_dir }}</code> to upload. Each file is verified after import.
+        </div>
+        <div class="toolbar">
+          <button type="button" class="btn btn-ghost" id="selectAllCsv">Select all</button>
+          <button type="button" class="btn btn-ghost" id="deselectAllCsv">Clear</button>
+          <div class="checkbox-row" style="margin:0;">
+            <input type="checkbox" id="dry_run" />
+            <label for="dry_run">Dry run (no API writes)</label>
+          </div>
+          <button type="button" class="btn btn-gold" id="btnUploadCsv">Upload selected</button>
+          <span class="count-pill" id="csvSelectedCount">0 selected</span>
+        </div>
+        <div class="file-grid" id="csvFileGrid">
+          {% for f in input_files %}
+          <label class="file-card" data-name="{{ f.name }}">
+            <input type="checkbox" class="csv-checkbox" value="{{ f.name }}" />
+            <div class="meta">
+              <div class="name">{{ f.name }}</div>
+              <div class="users">{{ f.users }} users in file</div>
+            </div>
+          </label>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state"><p>No CSV files in <code>prod/input/</code>. Run <code>generate_input_csvs.py</code>.</p></div>
+      {% endif %}
+    </section>
+  </div>
+
+  <!-- Progress modal -->
+  <div class="modal-backdrop" id="progressModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="progressTitle">
+      <h3 id="progressTitle">Working…</h3>
+      <p class="sub" id="progressSub">Please wait</p>
+      <div class="progress-track"><div class="progress-fill indeterminate" id="progressFill"></div></div>
+      <p class="progress-text" id="progressText">Starting…</p>
+      <div class="progress-log" id="progressLog"></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-gold show" id="progressClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CONFIGURED = {% if configured %}true{% else %}false{% endif %};
+
+    function switchTab(name, el) {
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      const panel = document.getElementById(name);
+      if (panel) panel.classList.add('active');
+      if (el) el.classList.add('active');
+      history.replaceState(null, '', '?tab=' + name);
+      if (name === 'userlists') applyUserlistFilters();
+    }
+
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab, btn));
+    });
+
+    (function initTabFromUrl() {
+      const tab = new URLSearchParams(window.location.search).get('tab');
+      if (!tab) return;
+      const btn = document.querySelector('.tab[data-tab="' + tab + '"]');
+      if (btn) switchTab(tab, btn);
+    })();
+
+    /* ---- Progress modal ---- */
+    const modal = document.getElementById('progressModal');
+    const progressFill = document.getElementById('progressFill');
+    const progressTitle = document.getElementById('progressTitle');
+    const progressSub = document.getElementById('progressSub');
+    const progressText = document.getElementById('progressText');
+    const progressLog = document.getElementById('progressLog');
+    const progressClose = document.getElementById('progressClose');
+
+    function openProgress(title, sub) {
+      progressTitle.textContent = title;
+      progressSub.textContent = sub || '';
+      progressText.textContent = 'Starting…';
+      progressLog.innerHTML = '';
+      progressLog.classList.remove('visible');
+      progressFill.className = 'progress-fill indeterminate';
+      progressFill.style.width = '';
+      progressClose.classList.remove('show');
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function setProgress(pct, text) {
+      progressFill.classList.remove('indeterminate');
+      progressFill.style.width = Math.min(100, pct) + '%';
+      if (text) progressText.textContent = text;
+    }
+
+    function appendLog(html, isOk) {
+      progressLog.classList.add('visible');
+      const line = document.createElement('div');
+      line.className = isOk ? 'ok' : 'fail';
+      line.innerHTML = html;
+      progressLog.appendChild(line);
+      progressLog.scrollTop = progressLog.scrollHeight;
+    }
+
+    function finishProgress(ok, message, reload) {
+      setProgress(100, message);
+      progressFill.style.background = ok
+        ? 'linear-gradient(90deg, #6ee7a0, #5dce8a)'
+        : 'linear-gradient(90deg, #ff6b6b, #e85d5d)';
+      progressClose.classList.add('show');
+      progressClose.onclick = () => {
+        modal.classList.remove('open');
+        if (reload) location.reload();
+      };
+    }
+
+    // Base path the app is mounted at ("" standalone, "/gophish-support" behind proxy).
+    const APP_BASE = "{{ request.script_root }}";
+
+    async function postJson(url, body) {
+      // Prefix absolute app paths so AJAX works under a reverse-proxy subpath.
+      if (url.charAt(0) === '/') url = APP_BASE + url;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok && !data.message) throw new Error(res.statusText);
+      return data;
+    }
+
+    /* ---- Settings ---- */
+    document.getElementById('settingsForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      openProgress('Connecting', 'Testing Gophish API');
+      try {
+        const data = await postJson('/ajax/settings', {
+          gophish_url: document.getElementById('gophish_url').value.trim(),
+          gophish_api_key: document.getElementById('gophish_api_key').value.trim(),
+          save_env: document.getElementById('save_env').checked,
+        });
+        finishProgress(data.ok, data.message, data.ok);
+      } catch (err) {
+        finishProgress(false, err.message, false);
+      }
+    });
+
+    /* ---- Sorting ---- */
+    function sortTable(tbody, rows, keyFn, desc) {
+      rows.sort((a, b) => {
+        const av = keyFn(a), bv = keyFn(b);
+        if (av < bv) return desc ? 1 : -1;
+        if (av > bv) return desc ? -1 : 1;
+        return 0;
+      });
+      rows.forEach(r => tbody.appendChild(r));
+    }
+
+    document.getElementById('campaignSort')?.addEventListener('change', function () {
+      const tbody = document.querySelector('#campaignTable tbody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('.campaign-row'));
+      const v = this.value;
+      const map = {
+        'name-asc': [r => r.dataset.name, false],
+        'name-desc': [r => r.dataset.name, true],
+        'id-desc': [r => +r.dataset.id, true],
+        'id-asc': [r => +r.dataset.id, false],
+        'status-asc': [r => r.dataset.status, false],
+      };
+      const [fn, desc] = map[v] || map['name-asc'];
+      sortTable(tbody, rows, fn, desc);
+    });
+
+    let userlistFilter = 'all';
+    document.querySelectorAll('#userlistFilters .filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#userlistFilters .filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        userlistFilter = btn.dataset.filter;
+        applyUserlistFilters();
+      });
+    });
+
+    function applyUserlistFilters() {
+      const rows = document.querySelectorAll('.userlist-row');
+      let visible = 0;
+      rows.forEach(row => {
+        const n = +row.dataset.users;
+        let show = true;
+        if (userlistFilter === 'plus50') show = n >= 50;
+        if (userlistFilter === 'under50') show = n < 50;
+        row.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      const el = document.getElementById('userlistCount');
+      if (el) el.textContent = visible + ' visible · ' + rows.length + ' total';
+    }
+
+    document.getElementById('userlistSort')?.addEventListener('change', function () {
+      const tbody = document.querySelector('#userlistTable tbody');
+      if (!tbody) return;
+      const rows = Array.from(tbody.querySelectorAll('.userlist-row'));
+      const v = this.value;
+      const map = {
+        'name-asc': [r => r.dataset.name, false],
+        'name-desc': [r => r.dataset.name, true],
+        'users-desc': [r => +r.dataset.users, true],
+        'users-asc': [r => +r.dataset.users, false],
+        'id-desc': [r => +r.dataset.id, true],
+        'modified-desc': [r => r.dataset.modified || '', true],
+      };
+      const [fn, desc] = map[v] || map['name-asc'];
+      sortTable(tbody, rows, fn, desc);
+      applyUserlistFilters();
+    });
+
+    if (document.getElementById('userlistTable')) applyUserlistFilters();
+
+    /* ---- Selection helpers ---- */
+    function selectVisible(type) {
+      const sel = type === 'campaign' ? '.campaign-row:not(.hidden)' : '.userlist-row:not(.hidden)';
+      document.querySelectorAll(sel + ' .' + type + '-checkbox').forEach(cb => { cb.checked = true; });
+    }
+    function deselectAll(type) {
+      document.querySelectorAll('.' + type + '-checkbox').forEach(cb => { cb.checked = false; });
+    }
+
+    document.getElementById('selectAllCampaigns')?.addEventListener('change', function () {
+      document.querySelectorAll('.campaign-row:not(.hidden) .campaign-checkbox').forEach(cb => {
+        cb.checked = this.checked;
+      });
+    });
+    document.getElementById('selectAllUserlists')?.addEventListener('change', function () {
+      document.querySelectorAll('.userlist-row:not(.hidden) .userlist-checkbox').forEach(cb => {
+        cb.checked = this.checked;
+      });
+    });
+
+    function getCheckedValues(className) {
+      return Array.from(document.querySelectorAll('.' + className + ':checked')).map(cb => cb.value);
+    }
+
+    /* ---- Delete campaigns ---- */
+    document.getElementById('btnDeleteCampaigns')?.addEventListener('click', async () => {
+      const ids = getCheckedValues('campaign-checkbox');
+      if (!ids.length) { alert('Select at least one campaign.'); return; }
+      if (!confirm('Delete ' + ids.length + ' campaign(s) and all their results?')) return;
+
+      openProgress('Deleting campaigns', ids.length + ' selected');
+      let done = 0;
+      try {
+        setProgress(10, 'Sending request…');
+        const data = await postJson('/ajax/delete-campaigns', { campaign_ids: ids });
+        setProgress(90, data.message);
+        if (data.failed?.length) {
+          data.failed.forEach(f => appendLog('Campaign ' + f.id + ': ' + f.error, false));
+        }
+        finishProgress(data.ok, data.message, true);
+      } catch (err) {
+        finishProgress(false, err.message, false);
+      }
+    });
+
+    /* ---- Delete userlists ---- */
+    document.getElementById('btnDeleteUserlists')?.addEventListener('click', async () => {
+      const ids = getCheckedValues('userlist-checkbox');
+      if (!ids.length) { alert('Select at least one userlist.'); return; }
+      if (!confirm('Delete ' + ids.length + ' userlist(s)?')) return;
+
+      openProgress('Deleting userlists', ids.length + ' selected');
+      try {
+        setProgress(15, 'Deleting…');
+        const data = await postJson('/ajax/delete-userlists', { userlist_ids: ids });
+        if (data.failed?.length) {
+          data.failed.forEach(f => appendLog('Group ' + f.id + ': ' + f.error, false));
+        }
+        finishProgress(data.ok, data.message, true);
+      } catch (err) {
+        finishProgress(false, err.message, false);
+      }
+    });
+
+    /* ---- CSV file selection ---- */
+    function updateCsvSelection() {
+      document.querySelectorAll('.file-card').forEach(card => {
+        const cb = card.querySelector('.csv-checkbox');
+        card.classList.toggle('selected', cb && cb.checked);
+      });
+      const n = getCheckedValues('csv-checkbox').length;
+      const el = document.getElementById('csvSelectedCount');
+      if (el) el.textContent = n + ' selected';
+    }
+
+    document.querySelectorAll('.csv-checkbox').forEach(cb => {
+      cb.addEventListener('change', updateCsvSelection);
+    });
+    document.getElementById('selectAllCsv')?.addEventListener('click', () => {
+      document.querySelectorAll('.csv-checkbox').forEach(cb => { cb.checked = true; });
+      updateCsvSelection();
+    });
+    document.getElementById('deselectAllCsv')?.addEventListener('click', () => {
+      document.querySelectorAll('.csv-checkbox').forEach(cb => { cb.checked = false; });
+      updateCsvSelection();
+    });
+    updateCsvSelection();
+
+    document.getElementById('btnUploadCsv')?.addEventListener('click', async () => {
+      const files = getCheckedValues('csv-checkbox');
+      if (!files.length) { alert('Select at least one CSV file.'); return; }
+      const dry = document.getElementById('dry_run').checked;
+      if (!dry && !confirm('Upload and verify ' + files.length + ' file(s)?')) return;
+
+      openProgress(dry ? 'Dry run' : 'Uploading userbases', files.length + ' file(s)');
+      try {
+        setProgress(20, 'Processing…');
+        const data = await postJson('/ajax/upload-userbases', { csv_files: files, dry_run: dry });
+        setProgress(70, data.message);
+        (data.results || []).forEach(r => {
+          const ok = r.ok;
+          appendLog(
+            (ok ? '✓ ' : '✗ ') + r.file + ' — local ' + r.local + ', import ' + r.import + ', stored ' + r.stored,
+            ok
+          );
+          if (r.errors?.length) r.errors.forEach(e => appendLog('  ' + e, false));
+        });
+        finishProgress(data.ok, data.message, true);
+      } catch (err) {
+        finishProgress(false, err.message, false);
+      }
+    });
+  </script>
+</body>
+</html>
