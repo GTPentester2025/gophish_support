@@ -41,44 +41,18 @@
       z-index: 0;
     }
 
-    .wrap { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 24px 20px 60px; }
+    .wrap { position: relative; z-index: 1; max-width: 1320px; margin: 0 auto; padding: 24px 20px 100px; }
 
     header {
       display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
       gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid var(--border);
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .brand-logo {
-      height: 58px;
-      width: auto;
-      max-width: 240px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .brand-text h1 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: 0.02em;
-      line-height: 1.2;
-    }
-
-    .brand-text h1 span {
-      color: var(--gold-light);
-    }
-
-    .brand-text p {
-      color: var(--muted);
-      font-size: 0.88rem;
-      margin-top: 4px;
-    }
+    .brand { display: flex; align-items: center; gap: 18px; }
+    .brand-logo { height: 58px; width: auto; max-width: 240px; object-fit: contain; display: block; }
+    .brand-text h1 { font-size: 1.75rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; line-height: 1.2; }
+    .brand-text h1 span { color: var(--gold-light); }
+    .brand-text p { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
 
     .status-pill {
       display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px;
@@ -88,7 +62,6 @@
     .status-pill.connected { border-color: var(--gold-dim); color: var(--gold-light); box-shadow: 0 0 20px rgba(212,175,55,0.15); }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
     .status-pill:not(.connected) .status-dot { background: #555; animation: none; }
-
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 
     .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
@@ -120,7 +93,6 @@
       margin-bottom: 14px; padding: 12px; background: var(--surface2);
       border-radius: var(--radius); border: 1px solid var(--border);
     }
-
     .toolbar label { font-size: 0.75rem; color: var(--gold); font-weight: 700; text-transform: uppercase; margin-right: 4px; }
 
     select, input[type="text"], input[type="url"], input[type="password"] {
@@ -147,6 +119,7 @@
     .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
     .btn-danger { background: transparent; color: var(--danger); border: 1px solid rgba(255,107,107,0.5); }
     .btn-danger:hover { background: rgba(255,107,107,0.12); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
 
     .info {
       padding: 12px 14px; background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25);
@@ -158,10 +131,7 @@
     .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-    th {
-      background: var(--surface2); color: var(--gold); font-size: 0.72rem;
-      text-transform: uppercase; letter-spacing: 0.04em; position: sticky; top: 0;
-    }
+    th { background: var(--surface2); color: var(--gold); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; position: sticky; top: 0; }
     tr.data-row { transition: background 0.15s; }
     tr.data-row:hover td { background: rgba(212,175,55,0.06); }
     tr.data-row.hidden { display: none; }
@@ -176,14 +146,13 @@
 
     input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--gold); cursor: pointer; }
 
-    .file-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px;
-    }
+    .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; }
     .file-card {
       display: flex; align-items: flex-start; gap: 10px; padding: 12px;
       background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
-      cursor: pointer; transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer; transition: border-color 0.2s, transform 0.2s; user-select: none;
     }
+    #upload .toolbar .btn { position: relative; z-index: 2; }
     .file-card:hover { border-color: var(--gold-dim); transform: translateY(-2px); }
     .file-card.selected { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
     .file-card .meta { flex: 1; }
@@ -201,10 +170,7 @@
     .flash.error { background: rgba(255,107,107,0.1); border-color: rgba(255,107,107,0.35); color: var(--danger); }
     .flash.warning { background: rgba(212,175,55,0.12); border-color: rgba(212,175,55,0.35); color: var(--gold-light); }
 
-    .field-label {
-      display: block; font-size: 0.72rem; font-weight: 700; color: var(--gold);
-      text-transform: uppercase; margin-bottom: 6px;
-    }
+    .field-label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
     .field-hint { font-size: 0.8rem; color: var(--muted); margin: -8px 0 14px; }
     .field-input { width: 100%; margin-bottom: 14px; }
     .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; color: var(--muted); font-size: 0.88rem; }
@@ -219,7 +185,7 @@
     @keyframes fadeBg { from { opacity: 0; } to { opacity: 1; } }
 
     .modal {
-      width: 100%; max-width: 480px; background: var(--surface);
+      width: 100%; max-width: 520px; background: var(--surface);
       border: 1px solid var(--border); border-radius: 14px; padding: 24px;
       box-shadow: 0 24px 64px rgba(0,0,0,0.6); animation: popIn 0.25s ease;
     }
@@ -236,19 +202,13 @@
       height: 100%; width: 0%; background: linear-gradient(90deg, var(--gold), var(--gold-light));
       border-radius: 999px; transition: width 0.25s ease;
     }
-    .progress-fill.indeterminate {
-      width: 40% !important; animation: indeterminate 1.2s ease-in-out infinite;
-    }
-    @keyframes indeterminate {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(350%); }
-    }
+    .progress-fill.indeterminate { width: 40% !important; animation: indeterminate 1.2s ease-in-out infinite; }
+    @keyframes indeterminate { 0% { transform: translateX(-100%); } 100% { transform: translateX(350%); } }
 
     .progress-text { font-size: 0.85rem; color: var(--muted); margin-bottom: 12px; }
     .progress-log {
-      max-height: 160px; overflow-y: auto; font-size: 0.8rem; color: var(--muted);
-      background: var(--bg); border-radius: 8px; padding: 10px; border: 1px solid var(--border);
-      display: none;
+      max-height: 200px; overflow-y: auto; font-size: 0.8rem; color: var(--muted);
+      background: var(--bg); border-radius: 8px; padding: 10px; border: 1px solid var(--border); display: none;
     }
     .progress-log.visible { display: block; }
     .progress-log .ok { color: var(--success); }
@@ -258,23 +218,257 @@
     .modal-actions .btn { display: none; }
     .modal-actions .btn.show { display: inline-flex; }
 
-    .count-pill {
-      margin-left: auto; font-size: 0.8rem; color: var(--muted); font-weight: 600;
+    .count-pill { margin-left: auto; font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+
+    /* ============================================================
+       CAMPAIGN CREATE BULK — Pipeline Redesign
+    ============================================================ */
+
+    /* Stepper */
+    .cc-stepper {
+      display: flex; align-items: flex-start; gap: 0; margin-bottom: 24px; overflow-x: auto;
     }
+    .cc-step {
+      display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 100px;
+      position: relative;
+    }
+    .cc-step + .cc-step::before {
+      content: ""; position: absolute; top: 15px; right: 50%; width: 100%;
+      height: 2px; background: var(--border); z-index: 0;
+    }
+    .cc-step.done + .cc-step::before { background: var(--gold-dim); }
+    .cc-step-num {
+      width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 0.78rem; font-weight: 700; position: relative; z-index: 1;
+      background: var(--surface2); border: 2px solid var(--border); color: var(--muted);
+      transition: all 0.2s;
+    }
+    .cc-step.active .cc-step-num { background: var(--gold); border-color: var(--gold); color: #111; }
+    .cc-step.done .cc-step-num { background: var(--gold-dim); border-color: var(--gold-dim); color: #fff; }
+    .cc-step-label { font-size: 0.72rem; color: var(--muted); margin-top: 6px; text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+    .cc-step.active .cc-step-label { color: var(--gold-light); }
+    .cc-step.done .cc-step-label { color: var(--gold-dim); }
+
+    /* Picker panels (step 1) */
+    .create-resources-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px;
+    }
+    @media (min-width: 1100px) { .create-resources-grid { grid-template-columns: repeat(4, 1fr); } }
+    @media (max-width: 640px)  { .create-resources-grid { grid-template-columns: 1fr; } }
+
+    .picker-panel {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 14px; display: flex; flex-direction: column; min-height: 280px;
+    }
+    .picker-panel h3 { font-size: 0.9rem; color: var(--gold-light); margin-bottom: 6px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .picker-panel h3 svg { flex-shrink: 0; }
+    .picker-search {
+      width: 100%; margin-bottom: 8px; padding: 8px 10px; font-size: 0.85rem;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+    }
+    .picker-search:focus { outline: none; border-color: var(--gold); }
+    .picker-scroll {
+      flex: 1; min-height: 200px; max-height: 280px; overflow-y: auto;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: #0d0d0d; padding: 4px; margin-bottom: 10px;
+    }
+    .picker-row {
+      display: flex; align-items: flex-start; gap: 10px; padding: 9px 10px; border-radius: 6px;
+      font-size: 0.88rem; cursor: pointer; transition: background 0.15s;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .picker-row:last-child { border-bottom: none; }
+    .picker-row:hover { background: rgba(212,175,55,0.12); }
+    .picker-row input { margin-top: 3px; flex-shrink: 0; }
+    .picker-row .picker-label { flex: 1; color: var(--text); line-height: 1.35; word-break: break-word; }
+    .picker-row .meta { display: block; color: var(--muted); font-size: 0.72rem; margin-top: 4px; }
+    .picker-count { font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
+
+    /* Skeleton rows */
+    .skel-row {
+      height: 38px; border-radius: 6px; margin-bottom: 4px;
+      background: linear-gradient(90deg, #1a1a1a 25%, #222 50%, #1a1a1a 75%);
+      background-size: 200% 100%; animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* Toolbar resource status */
+    .res-status-chip {
+      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+      border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+      background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.2); color: var(--gold-light);
+    }
+    .res-status-chip.loading { color: var(--muted); border-color: var(--border); }
+    .res-status-chip.cached { color: var(--muted); font-style: italic; }
+
+    /* Bulk-apply bar (step 2 header) */
+    .bulk-apply-bar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+      padding: 14px 16px; background: var(--surface2);
+      border: 1px solid rgba(212,175,55,0.2); border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+    .bulk-apply-bar .bab-label {
+      font-size: 0.7rem; font-weight: 700; color: var(--gold); text-transform: uppercase;
+      letter-spacing: 0.05em; white-space: nowrap;
+    }
+    .bulk-apply-bar select {
+      flex: 1; min-width: 140px; max-width: 220px; font-size: 0.82rem; padding: 7px 10px;
+    }
+    .bulk-apply-bar .bab-actions { display: flex; gap: 6px; margin-left: auto; }
+
+    /* Phishing URL row */
+    .phish-url-row {
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; margin-bottom: 16px;
+    }
+    .phish-url-row label { font-size: 0.72rem; font-weight: 700; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
+    .phish-url-row input { flex: 1; }
+
+    /* Pipeline workspace */
+    .workspace-empty {
+      text-align: center; padding: 28px; color: var(--muted);
+      border: 1px dashed var(--border); border-radius: var(--radius); margin-bottom: 14px;
+    }
+    .workspace-cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+
+    .ws-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow);
+      transition: border-color 0.2s;
+    }
+    .ws-card:hover { border-color: rgba(212,175,55,0.3); }
+    .ws-card.ws-ready { border-left: 3px solid var(--gold-dim); }
+    .ws-card.ws-incomplete { border-left: 3px solid rgba(255,107,107,0.5); }
+
+    .ws-card-head {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 8px; margin-bottom: 12px;
+    }
+    .ws-card-title { font-size: 0.82rem; color: var(--muted); }
+    .ws-card-title strong { color: var(--gold-light); font-weight: 700; }
+    .ws-badge-ready {
+      display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px;
+      border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+    }
+    .ws-badge-ready.ready { background: rgba(110,231,160,0.12); border: 1px solid rgba(110,231,160,0.35); color: var(--success); }
+    .ws-badge-ready.incomplete { background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); color: var(--danger); }
+    .ws-dup-warn {
+      font-size: 0.75rem; color: var(--danger); padding: 4px 8px; border-radius: 6px;
+      background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.25); display: none;
+    }
+    .ws-dup-warn.visible { display: inline-block; }
+
+    /* Campaign name input */
+    .ws-name-wrap { margin-bottom: 14px; }
+    .ws-name-wrap label { font-size: 0.68rem; font-weight: 700; color: var(--gold); text-transform: uppercase; display: block; margin-bottom: 5px; letter-spacing: 0.04em; }
+    .ws-campaign-name {
+      width: 100%; padding: 9px 12px; font-size: 0.92rem;
+      font-family: Consolas, 'Courier New', monospace;
+      background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      color: var(--gold-light); resize: none; line-height: 1.4;
+    }
+    .ws-campaign-name:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212,175,55,0.2); }
+
+    /* ---- PIPELINE ---- */
+    .ws-pipeline {
+      display: flex; align-items: stretch; gap: 0; overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    /* Connector arrow between nodes */
+    .ws-connector {
+      display: flex; align-items: center; flex-shrink: 0; padding: 0 4px;
+    }
+    .ws-connector svg { display: block; }
+
+    /* Pipeline node */
+    .ws-node {
+      flex: 1; min-width: 140px; max-width: 220px;
+      background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
+      transition: border-color 0.2s, box-shadow 0.2s; position: relative;
+    }
+    .ws-node.set { border-color: var(--gold-dim); box-shadow: 0 0 12px rgba(212,175,55,0.1); }
+    .ws-node.missing { border-color: rgba(255,107,107,0.45); border-style: dashed; }
+    .ws-node.group-node { background: rgba(212,175,55,0.05); border-color: rgba(212,175,55,0.2); border-style: solid; }
+
+    .ws-node-icon {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+    .ws-node-icon svg { flex-shrink: 0; }
+    .ws-node.set .ws-node-icon { color: var(--gold-dim); }
+    .ws-node.missing .ws-node-icon { color: rgba(255,107,107,0.7); }
+    .ws-node.group-node .ws-node-icon { color: var(--gold); }
+
+    .ws-node-value {
+      font-size: 0.82rem; font-weight: 600; color: var(--text); line-height: 1.3;
+      word-break: break-word; min-height: 2.4em;
+    }
+    .ws-node.set .ws-node-value { color: var(--text); }
+    .ws-node.missing .ws-node-value { color: rgba(255,107,107,0.7); font-style: italic; }
+    .ws-node.group-node .ws-node-value { color: var(--gold-light); }
+
+    .ws-node-select {
+      width: 100%; padding: 6px 8px; font-size: 0.8rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); margin-top: 4px;
+    }
+    .ws-node-select:focus { outline: none; border-color: var(--gold); }
+    .ws-node.set .ws-node-select { border-color: var(--gold-dim); }
+    .ws-node.missing .ws-node-select { border-color: rgba(255,107,107,0.45); }
+
+    /* Sticky create footer */
+    .create-sticky-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+      background: rgba(8,8,8,0.95); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(212,175,55,0.2); padding: 12px 24px;
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+    }
+    .create-sticky-bar.hidden { display: none; }
+    .sticky-readiness {
+      font-size: 0.85rem; font-weight: 600; color: var(--muted);
+    }
+    .sticky-readiness .rdy { color: var(--success); }
+    .sticky-readiness .tot { color: var(--gold-light); }
+    .sticky-readiness .inc { color: var(--danger); }
+
+    /* Immediate-send warning banner (Campaign Create Bulk) */
+    .cc-warning-banner {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 16px; margin-bottom: 18px; border-radius: var(--radius);
+      background: rgba(255,107,107,0.10);
+      border: 1px solid rgba(255,107,107,0.45);
+      box-shadow: 0 0 0 1px rgba(255,107,107,0.08), var(--shadow);
+    }
+    .cc-warning-banner .cc-warning-icon {
+      flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,107,107,0.18); color: var(--danger);
+      font-weight: 800; font-size: 1rem; line-height: 1;
+    }
+    .cc-warning-banner .cc-warning-body { flex: 1; }
+    .cc-warning-banner .cc-warning-title {
+      color: var(--danger); font-weight: 800; font-size: 0.92rem;
+      text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px;
+    }
+    .cc-warning-banner .cc-warning-text { color: var(--text); font-size: 0.88rem; }
+    .cc-warning-banner .cc-warning-text strong { color: var(--gold-light); }
+
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div class="brand">
-        <img
-          class="brand-logo"
-          src="{{ url_for('static', filename='images/ab-inbev-logo.png') }}"
-          alt="AB InBev"
-        />
+        <img class="brand-logo" src="{{ url_for('static', filename='images/ab-inbev-logo.png') }}" alt="AB InBev" />
         <div class="brand-text">
           <h1><span>Gophish</span>-Support</h1>
-          <p>Campaign Delete · Delete Userbase · Upload User base</p>
+          <p>Campaign Delete · Campaign Create Bulk · Delete Userbase · Upload User base</p>
         </div>
       </div>
       <div class="status-pill {% if configured %}connected{% endif %}" id="statusPill">
@@ -294,17 +488,23 @@
     <nav class="tabs">
       <button type="button" class="tab {% if active_tab == 'settings' %}active{% endif %}" data-tab="settings">Settings</button>
       <button type="button" class="tab {% if active_tab == 'campaigns' %}active{% endif %}" data-tab="campaigns">Campaign Delete</button>
+      <button type="button" class="tab {% if active_tab == 'campaign-create' %}active{% endif %}" data-tab="campaign-create">Campaign Create Bulk</button>
       <button type="button" class="tab {% if active_tab == 'userlists' %}active{% endif %}" data-tab="userlists">Delete Userbase</button>
       <button type="button" class="tab {% if active_tab == 'upload' %}active{% endif %}" data-tab="upload">Upload User base</button>
     </nav>
 
-    <!-- Settings -->
+    <!-- ======== SETTINGS ======== -->
     <section id="settings" class="tab-content {% if active_tab == 'settings' %}active{% endif %}">
       <h2>Connection</h2>
       <div class="card">
         <form id="settingsForm">
           <span class="field-label">Gophish URL</span>
           <input class="field-input" type="url" id="gophish_url" name="gophish_url" value="{{ gophish_url }}" placeholder="https://127.0.0.1:3333" required />
+          <p class="field-hint">
+            Use the same address as Gophish admin in your browser:<br />
+            <strong>Local</strong> — <code>https://127.0.0.1:3333</code>&nbsp;&nbsp;
+            <strong>Remote</strong> — <code>https://your-server.com:3333</code>
+          </p>
           <span class="field-label">API key</span>
           <input class="field-input" type="password" id="gophish_api_key" name="gophish_api_key"
             placeholder="{% if configured %}Leave blank to keep current{% else %}From Gophish Settings{% endif %}" />
@@ -318,7 +518,7 @@
       </div>
     </section>
 
-    <!-- Campaigns -->
+    <!-- ======== CAMPAIGNS (Delete) ======== -->
     <section id="campaigns" class="tab-content {% if active_tab == 'campaigns' %}active{% endif %}">
       <h2>Campaign Delete</h2>
       {% if not configured %}
@@ -364,7 +564,154 @@
       {% endif %}
     </section>
 
-    <!-- Userlists -->
+    <!-- ======== CAMPAIGN CREATE BULK (REDESIGNED) ======== -->
+    <section id="campaign-create" class="tab-content {% if active_tab == 'campaign-create' %}active{% endif %}">
+      <h2>Campaign Create Bulk</h2>
+      {% if not configured %}
+        <div class="empty-state"><p>Connect in <strong style="color:var(--gold-light)">Settings</strong> first.</p></div>
+      {% else %}
+
+        <!-- Immediate-send warning -->
+        <div class="cc-warning-banner" role="alert">
+          <div class="cc-warning-icon">&#9888;</div>
+          <div class="cc-warning-body">
+            <div class="cc-warning-title">Campaigns launch immediately</div>
+            <div class="cc-warning-text">
+              Clicking <strong>Create campaigns</strong> launches every campaign <strong>right away</strong> and
+              Gophish starts <strong>sending phishing emails to all recipients immediately</strong> &mdash;
+              there is no schedule or delay. Double-check the user groups, template, landing page and sending
+              profile before you create.
+            </div>
+          </div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="cc-stepper" id="ccStepper">
+          <div class="cc-step active" id="ccStep1">
+            <div class="cc-step-num">1</div>
+            <div class="cc-step-label">Select groups</div>
+          </div>
+          <div class="cc-step" id="ccStep2">
+            <div class="cc-step-num">2</div>
+            <div class="cc-step-label">Map pipeline</div>
+          </div>
+          <div class="cc-step" id="ccStep3">
+            <div class="cc-step-num">3</div>
+            <div class="cc-step-label">Review &amp; create</div>
+          </div>
+        </div>
+
+        <!-- Toolbar / resource load -->
+        <div class="toolbar" id="createToolbar">
+          <button type="button" class="btn btn-ghost" id="btnReloadCreateResources">&#8635; Reload resources</button>
+          <span id="createLoadStatus" class="res-status-chip loading">Not loaded</span>
+        </div>
+
+        <!-- Step 1: Picker grid (4 panels) -->
+        <div id="ccSection1">
+          <div class="create-resources-grid">
+            <!-- Groups picker -->
+            <div class="picker-panel">
+              <h3>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="5" r="3" stroke="#d4af37" stroke-width="1.5"/>
+                  <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="#d4af37" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                User groups
+              </h3>
+              <input type="search" class="picker-search" id="filterGroups" placeholder="Search groups…" disabled />
+              <p class="picker-count" id="countGroups">—</p>
+              <div class="picker-scroll" id="createGroupPicker">
+                <div class="skel-row"></div><div class="skel-row"></div><div class="skel-row"></div>
+              </div>
+              <button type="button" class="btn btn-gold" id="btnAddGroupsToWorkspace" disabled>Add to workspace &rarr;</button>
+            </div>
+            <!-- Templates picker -->
+            <div class="picker-panel">
+              <h3>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <rect x="2" y="2" width="12" height="12" rx="2" stroke="#d4af37" stroke-width="1.5"/>
+                  <path d="M5 6h6M5 9h4" stroke="#d4af37" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                Email templates
+              </h3>
+              <input type="search" class="picker-search" id="filterTemplates" placeholder="Search templates…" disabled />
+              <p class="picker-count" id="countTemplates">—</p>
+              <div class="picker-scroll" id="createTemplatePicker">
+                <div class="skel-row"></div><div class="skel-row"></div>
+              </div>
+            </div>
+            <!-- Pages picker -->
+            <div class="picker-panel">
+              <h3>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <rect x="2" y="1" width="12" height="14" rx="2" stroke="#d4af37" stroke-width="1.5"/>
+                  <path d="M5 5h6M5 8h6M5 11h3" stroke="#d4af37" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                Landing pages
+              </h3>
+              <input type="search" class="picker-search" id="filterPages" placeholder="Search landing pages…" disabled />
+              <p class="picker-count" id="countPages">—</p>
+              <div class="picker-scroll" id="createPagePicker">
+                <div class="skel-row"></div><div class="skel-row"></div>
+              </div>
+            </div>
+            <!-- SMTP picker -->
+            <div class="picker-panel">
+              <h3>
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <rect x="1" y="3" width="14" height="10" rx="2" stroke="#d4af37" stroke-width="1.5"/>
+                  <path d="M1 5l7 5 7-5" stroke="#d4af37" stroke-width="1.5"/>
+                </svg>
+                Sending profiles
+              </h3>
+              <input type="search" class="picker-search" id="filterSmtp" placeholder="Search SMTP…" disabled />
+              <p class="picker-count" id="countSmtp">—</p>
+              <div class="picker-scroll" id="createSmtpPicker">
+                <div class="skel-row"></div><div class="skel-row"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Workspace pipeline -->
+        <div id="ccSection2">
+          <!-- Phishing URL -->
+          <div class="phish-url-row">
+            <label for="createPhishingUrl">Phishing URL</label>
+            <input type="text" id="createPhishingUrl" value="http://localhost" placeholder="http://localhost" />
+          </div>
+
+          <!-- Bulk-apply bar -->
+          <div class="bulk-apply-bar" id="bulkApplyBar">
+            <span class="bab-label">Apply to all rows:</span>
+            <select id="babTemplate" disabled><option value="">— Template —</option></select>
+            <select id="babPage" disabled><option value="">— Landing page —</option></select>
+            <select id="babSmtp" disabled><option value="">— SMTP profile —</option></select>
+            <div class="bab-actions">
+              <button type="button" class="btn btn-ghost" id="btnBulkApplyAll" disabled>Apply to all</button>
+              <button type="button" class="btn btn-ghost" id="btnBulkApplyIncomplete" disabled>Apply to incomplete</button>
+            </div>
+          </div>
+
+          <!-- Pipeline cards -->
+          <div id="workspaceEmpty" class="workspace-empty">
+            No campaigns in workspace — select user groups above and click
+            <strong style="color:var(--gold-light)">Add to workspace</strong>.
+          </div>
+          <div id="workspaceCards" class="workspace-cards" style="display:none;"></div>
+
+          <!-- Workspace actions -->
+          <div class="toolbar" style="margin-top:14px;">
+            <button type="button" class="btn btn-ghost" id="btnClearWorkspace">Clear workspace</button>
+            <span class="count-pill" id="workspaceCount">0 in workspace</span>
+          </div>
+        </div>
+
+      {% endif %}
+    </section>
+
+    <!-- ======== USERLISTS (Delete) ======== -->
     <section id="userlists" class="tab-content {% if active_tab == 'userlists' %}active{% endif %}">
       <h2>Delete Userbase</h2>
       {% if not configured %}
@@ -425,14 +772,15 @@
       {% endif %}
     </section>
 
-    <!-- Upload -->
+    <!-- ======== UPLOAD ======== -->
     <section id="upload" class="tab-content {% if active_tab == 'upload' %}active{% endif %}">
       <h2>Upload User base</h2>
       {% if not configured %}
         <div class="empty-state"><p>Connect in Settings first.</p></div>
       {% elif input_files %}
         <div class="info">
-          Select CSV files from <code>{{ input_dir }}</code> to upload. Each file is verified after import.
+          Select CSV files from <code>{{ input_dir }}</code>. Each file becomes a Gophish group named like the file.
+          Uploads use long timeouts, cooldowns, and recheck of failures.
         </div>
         <div class="toolbar">
           <button type="button" class="btn btn-ghost" id="selectAllCsv">Select all</button>
@@ -440,6 +788,10 @@
           <div class="checkbox-row" style="margin:0;">
             <input type="checkbox" id="dry_run" />
             <label for="dry_run">Dry run (no API writes)</label>
+          </div>
+          <div class="checkbox-row" style="margin:0;">
+            <input type="checkbox" id="upload_recheck" checked />
+            <label for="upload_recheck">Recheck failed files after cooldown</label>
           </div>
           <button type="button" class="btn btn-gold" id="btnUploadCsv">Upload selected</button>
           <span class="count-pill" id="csvSelectedCount">0 selected</span>
@@ -459,15 +811,26 @@
         <div class="empty-state"><p>No CSV files in <code>prod/input/</code>. Run <code>generate_input_csvs.py</code>.</p></div>
       {% endif %}
     </section>
+
+  </div><!-- /.wrap -->
+
+  <!-- Sticky create bar (outside .wrap so it's truly fixed) -->
+  <div class="create-sticky-bar hidden" id="createStickyBar">
+    <span class="sticky-readiness" id="stickyReadiness">0 in workspace</span>
+    <button type="button" class="btn btn-ghost" id="stickyBtnClear" style="display:none;">Clear</button>
+    <button type="button" class="btn btn-gold" id="btnCreateCampaigns" disabled style="margin-left:auto;">
+      &#9654; Create campaigns
+    </button>
   </div>
 
-  <!-- Progress modal -->
+  <!-- ======== Progress modal ======== -->
   <div class="modal-backdrop" id="progressModal" aria-hidden="true">
     <div class="modal" role="dialog" aria-labelledby="progressTitle">
       <h3 id="progressTitle">Working…</h3>
       <p class="sub" id="progressSub">Please wait</p>
       <div class="progress-track"><div class="progress-fill indeterminate" id="progressFill"></div></div>
       <p class="progress-text" id="progressText">Starting…</p>
+      <p class="progress-text" id="progressEta" style="color:var(--gold-light);min-height:1.2em;"></p>
       <div class="progress-log" id="progressLog"></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-gold show" id="progressClose">Close</button>
@@ -478,6 +841,9 @@
   <script>
     const CONFIGURED = {% if configured %}true{% else %}false{% endif %};
 
+    /* =========================================================
+       TAB SWITCHING
+    ========================================================= */
     function switchTab(name, el) {
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -486,12 +852,16 @@
       if (el) el.classList.add('active');
       history.replaceState(null, '', '?tab=' + name);
       if (name === 'userlists') applyUserlistFilters();
+      if (name === 'campaign-create' && CONFIGURED) lazyLoadCreateResources();
+      if (name === 'upload') bindUploadTab();
+      // Show/hide sticky create bar
+      const stickyBar = document.getElementById('createStickyBar');
+      if (stickyBar) stickyBar.classList.toggle('hidden', name !== 'campaign-create');
     }
 
     document.querySelectorAll('.tab').forEach(btn => {
       btn.addEventListener('click', () => switchTab(btn.dataset.tab, btn));
     });
-
     (function initTabFromUrl() {
       const tab = new URLSearchParams(window.location.search).get('tab');
       if (!tab) return;
@@ -499,34 +869,41 @@
       if (btn) switchTab(tab, btn);
     })();
 
-    /* ---- Progress modal ---- */
-    const modal = document.getElementById('progressModal');
+    /* =========================================================
+       PROGRESS MODAL
+    ========================================================= */
+    const modal        = document.getElementById('progressModal');
     const progressFill = document.getElementById('progressFill');
-    const progressTitle = document.getElementById('progressTitle');
-    const progressSub = document.getElementById('progressSub');
+    const progressTitle= document.getElementById('progressTitle');
+    const progressSub  = document.getElementById('progressSub');
     const progressText = document.getElementById('progressText');
-    const progressLog = document.getElementById('progressLog');
-    const progressClose = document.getElementById('progressClose');
+    const progressEta  = document.getElementById('progressEta');
+    const progressLog  = document.getElementById('progressLog');
+    const progressClose= document.getElementById('progressClose');
 
+    function setProgressEta(label) {
+      if (progressEta) progressEta.textContent = label ? ('ETA: ' + label) : '';
+    }
     function openProgress(title, sub) {
       progressTitle.textContent = title;
       progressSub.textContent = sub || '';
       progressText.textContent = 'Starting…';
+      setProgressEta('');
       progressLog.innerHTML = '';
       progressLog.classList.remove('visible');
       progressFill.className = 'progress-fill indeterminate';
       progressFill.style.width = '';
-      progressClose.classList.remove('show');
+      progressFill.style.background = '';
+      progressClose.classList.add('show');
+      progressClose.onclick = null;
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
     }
-
     function setProgress(pct, text) {
       progressFill.classList.remove('indeterminate');
       progressFill.style.width = Math.min(100, pct) + '%';
       if (text) progressText.textContent = text;
     }
-
     function appendLog(html, isOk) {
       progressLog.classList.add('visible');
       const line = document.createElement('div');
@@ -535,36 +912,116 @@
       progressLog.appendChild(line);
       progressLog.scrollTop = progressLog.scrollHeight;
     }
-
     function finishProgress(ok, message, reload) {
       setProgress(100, message);
       progressFill.style.background = ok
         ? 'linear-gradient(90deg, #6ee7a0, #5dce8a)'
         : 'linear-gradient(90deg, #ff6b6b, #e85d5d)';
-      progressClose.classList.add('show');
       progressClose.onclick = () => {
         modal.classList.remove('open');
         if (reload) location.reload();
       };
     }
 
-    // Base path the app is mounted at ("" standalone, "/gophish-support" behind proxy).
-    const APP_BASE = "{{ request.script_root }}";
-
+    /* =========================================================
+       HTTP HELPERS
+    ========================================================= */
+    async function parseJsonResponse(res) {
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      const text = await res.text();
+      if (!ct.includes('application/json')) {
+        if (res.status === 404) throw new Error('API route not found (404). Restart the app from prod/.');
+        throw new Error('Server returned HTML instead of JSON (HTTP ' + res.status + ').');
+      }
+      let data;
+      try { data = JSON.parse(text); } catch (_) { throw new Error('Invalid JSON from server.'); }
+      return data;
+    }
     async function postJson(url, body) {
-      // Prefix absolute app paths so AJAX works under a reverse-proxy subpath.
-      if (url.charAt(0) === '/') url = APP_BASE + url;
       const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      const data = await res.json();
+      const data = await parseJsonResponse(res);
       if (!res.ok && !data.message) throw new Error(res.statusText);
       return data;
     }
+    async function* readNdjsonStream(response) {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split('\n');
+        buffer = parts.pop() || '';
+        for (const line of parts) { if (line.trim()) yield JSON.parse(line); }
+      }
+      if (buffer.trim()) yield JSON.parse(buffer);
+    }
+    async function postJsonStream(url, body, onEvent) {
+      const res = await fetch(url, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({}, body, { stream: true })),
+      });
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      if (!ct.includes('json') && !ct.includes('ndjson'))
+        throw new Error('Server returned unexpected response — restart prod/start.py');
+      if (ct.includes('ndjson') || ct.includes('x-ndjson')) {
+        let complete = null;
+        for await (const evt of readNdjsonStream(res)) {
+          if (evt.type === 'error') throw new Error(evt.message || 'Operation failed');
+          onEvent(evt);
+          if (evt.type === 'complete') complete = evt;
+        }
+        return complete;
+      }
+      const data = await parseJsonResponse(res);
+      if (!res.ok) throw new Error(data.message || res.statusText);
+      if (data.results) {
+        data.results.forEach(r => onEvent({ type: 'file_done', result: r }));
+      }
+      onEvent({ type: 'complete', ok: data.ok, message: data.message, passed: data.passed, total: data.total });
+      return data;
+    }
 
-    /* ---- Settings ---- */
+    function handleBulkStreamEvent(evt) {
+      if (evt.type === 'start') {
+        setProgress(5, 'Starting…');
+        setProgressEta(evt.eta_label || '');
+        if (evt.recheck) progressSub.textContent = 'Recheck + server cooldown enabled';
+      } else if (evt.type === 'progress') {
+        const pct = evt.total ? Math.min(88, (evt.index / evt.total) * 88) : 40;
+        setProgress(pct, (evt.file || evt.campaign_name || '') + ' (' + evt.index + '/' + evt.total + ')');
+        setProgressEta(evt.eta_label || '');
+      } else if (evt.type === 'cooldown') {
+        appendLog('&#9203; Cooldown ' + evt.seconds + 's — ' + (evt.reason || 'Gophish'), true);
+        progressText.textContent = 'Cooling down ' + evt.seconds + 's…';
+      } else if (evt.type === 'recheck_start') {
+        appendLog('&#8635; Rechecking ' + evt.count + ' failed item(s) after cooldown', true);
+        setProgress(90, 'Recheck pass');
+      } else if (evt.type === 'phase') {
+        progressText.textContent = (evt.file || '') + ': ' + (evt.phase || '…');
+      } else if (evt.type === 'file_done' && evt.result) {
+        const r = evt.result;
+        appendLog(
+          (r.ok ? '&#10003; ' : '&#10007; ') + r.file + (evt.recheck ? ' (recheck)' : '') +
+          ' — local ' + r.local + ', import ' + r.import + ', stored ' + r.stored, r.ok
+        );
+        (r.errors || []).forEach(e => appendLog('&nbsp;&nbsp;' + e, false));
+      } else if (evt.type === 'row_done' && evt.result) {
+        const r = evt.result;
+        appendLog(
+          (r.ok ? '&#10003; ' : '&#10007; ') + escHtml(r.campaign_name) + (evt.recheck ? ' (recheck)' : ''), r.ok
+        );
+        (r.errors || []).forEach(e => appendLog('&nbsp;&nbsp;' + escHtml(e), false));
+      }
+    }
+
+    /* =========================================================
+       SETTINGS FORM
+    ========================================================= */
     document.getElementById('settingsForm')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       openProgress('Connecting', 'Testing Gophish API');
@@ -580,7 +1037,9 @@
       }
     });
 
-    /* ---- Sorting ---- */
+    /* =========================================================
+       TABLE SORTING
+    ========================================================= */
     function sortTable(tbody, rows, keyFn, desc) {
       rows.sort((a, b) => {
         const av = keyFn(a), bv = keyFn(b);
@@ -590,23 +1049,19 @@
       });
       rows.forEach(r => tbody.appendChild(r));
     }
-
     document.getElementById('campaignSort')?.addEventListener('change', function () {
       const tbody = document.querySelector('#campaignTable tbody');
       if (!tbody) return;
       const rows = Array.from(tbody.querySelectorAll('.campaign-row'));
       const v = this.value;
       const map = {
-        'name-asc': [r => r.dataset.name, false],
-        'name-desc': [r => r.dataset.name, true],
-        'id-desc': [r => +r.dataset.id, true],
-        'id-asc': [r => +r.dataset.id, false],
+        'name-asc': [r => r.dataset.name, false], 'name-desc': [r => r.dataset.name, true],
+        'id-desc': [r => +r.dataset.id, true], 'id-asc': [r => +r.dataset.id, false],
         'status-asc': [r => r.dataset.status, false],
       };
       const [fn, desc] = map[v] || map['name-asc'];
       sortTable(tbody, rows, fn, desc);
     });
-
     let userlistFilter = 'all';
     document.querySelectorAll('#userlistFilters .filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -616,7 +1071,6 @@
         applyUserlistFilters();
       });
     });
-
     function applyUserlistFilters() {
       const rows = document.querySelectorAll('.userlist-row');
       let visible = 0;
@@ -631,28 +1085,25 @@
       const el = document.getElementById('userlistCount');
       if (el) el.textContent = visible + ' visible · ' + rows.length + ' total';
     }
-
     document.getElementById('userlistSort')?.addEventListener('change', function () {
       const tbody = document.querySelector('#userlistTable tbody');
       if (!tbody) return;
       const rows = Array.from(tbody.querySelectorAll('.userlist-row'));
       const v = this.value;
       const map = {
-        'name-asc': [r => r.dataset.name, false],
-        'name-desc': [r => r.dataset.name, true],
-        'users-desc': [r => +r.dataset.users, true],
-        'users-asc': [r => +r.dataset.users, false],
-        'id-desc': [r => +r.dataset.id, true],
-        'modified-desc': [r => r.dataset.modified || '', true],
+        'name-asc': [r => r.dataset.name, false], 'name-desc': [r => r.dataset.name, true],
+        'users-desc': [r => +r.dataset.users, true], 'users-asc': [r => +r.dataset.users, false],
+        'id-desc': [r => +r.dataset.id, true], 'modified-desc': [r => r.dataset.modified || '', true],
       };
       const [fn, desc] = map[v] || map['name-asc'];
       sortTable(tbody, rows, fn, desc);
       applyUserlistFilters();
     });
-
     if (document.getElementById('userlistTable')) applyUserlistFilters();
 
-    /* ---- Selection helpers ---- */
+    /* =========================================================
+       SELECTION HELPERS
+    ========================================================= */
     function selectVisible(type) {
       const sel = type === 'campaign' ? '.campaign-row:not(.hidden)' : '.userlist-row:not(.hidden)';
       document.querySelectorAll(sel + ' .' + type + '-checkbox').forEach(cb => { cb.checked = true; });
@@ -660,110 +1111,604 @@
     function deselectAll(type) {
       document.querySelectorAll('.' + type + '-checkbox').forEach(cb => { cb.checked = false; });
     }
-
     document.getElementById('selectAllCampaigns')?.addEventListener('change', function () {
-      document.querySelectorAll('.campaign-row:not(.hidden) .campaign-checkbox').forEach(cb => {
-        cb.checked = this.checked;
-      });
+      document.querySelectorAll('.campaign-row:not(.hidden) .campaign-checkbox').forEach(cb => { cb.checked = this.checked; });
     });
     document.getElementById('selectAllUserlists')?.addEventListener('change', function () {
-      document.querySelectorAll('.userlist-row:not(.hidden) .userlist-checkbox').forEach(cb => {
-        cb.checked = this.checked;
-      });
+      document.querySelectorAll('.userlist-row:not(.hidden) .userlist-checkbox').forEach(cb => { cb.checked = this.checked; });
     });
-
     function getCheckedValues(className) {
       return Array.from(document.querySelectorAll('.' + className + ':checked')).map(cb => cb.value);
     }
 
-    /* ---- Delete campaigns ---- */
+    /* =========================================================
+       DELETE CAMPAIGNS
+    ========================================================= */
     document.getElementById('btnDeleteCampaigns')?.addEventListener('click', async () => {
       const ids = getCheckedValues('campaign-checkbox');
       if (!ids.length) { alert('Select at least one campaign.'); return; }
       if (!confirm('Delete ' + ids.length + ' campaign(s) and all their results?')) return;
-
       openProgress('Deleting campaigns', ids.length + ' selected');
-      let done = 0;
       try {
         setProgress(10, 'Sending request…');
         const data = await postJson('/ajax/delete-campaigns', { campaign_ids: ids });
-        setProgress(90, data.message);
-        if (data.failed?.length) {
-          data.failed.forEach(f => appendLog('Campaign ' + f.id + ': ' + f.error, false));
-        }
+        if (data.failed?.length) data.failed.forEach(f => appendLog('Campaign ' + f.id + ': ' + f.error, false));
         finishProgress(data.ok, data.message, true);
-      } catch (err) {
-        finishProgress(false, err.message, false);
-      }
+      } catch (err) { finishProgress(false, err.message, false); }
     });
 
-    /* ---- Delete userlists ---- */
+    /* =========================================================
+       DELETE USERLISTS
+    ========================================================= */
     document.getElementById('btnDeleteUserlists')?.addEventListener('click', async () => {
       const ids = getCheckedValues('userlist-checkbox');
       if (!ids.length) { alert('Select at least one userlist.'); return; }
       if (!confirm('Delete ' + ids.length + ' userlist(s)?')) return;
-
       openProgress('Deleting userlists', ids.length + ' selected');
       try {
         setProgress(15, 'Deleting…');
         const data = await postJson('/ajax/delete-userlists', { userlist_ids: ids });
-        if (data.failed?.length) {
-          data.failed.forEach(f => appendLog('Group ' + f.id + ': ' + f.error, false));
-        }
+        if (data.failed?.length) data.failed.forEach(f => appendLog('Group ' + f.id + ': ' + f.error, false));
         finishProgress(data.ok, data.message, true);
-      } catch (err) {
-        finishProgress(false, err.message, false);
-      }
+      } catch (err) { finishProgress(false, err.message, false); }
     });
 
-    /* ---- CSV file selection ---- */
+    /* =========================================================
+       UPLOAD USER BASE
+    ========================================================= */
     function updateCsvSelection() {
-      document.querySelectorAll('.file-card').forEach(card => {
+      const section = document.getElementById('upload');
+      if (!section) return;
+      section.querySelectorAll('.file-card').forEach(card => {
         const cb = card.querySelector('.csv-checkbox');
         card.classList.toggle('selected', cb && cb.checked);
       });
-      const n = getCheckedValues('csv-checkbox').length;
+      const n = section.querySelectorAll('.csv-checkbox:checked').length;
       const el = document.getElementById('csvSelectedCount');
       if (el) el.textContent = n + ' selected';
     }
-
-    document.querySelectorAll('.csv-checkbox').forEach(cb => {
-      cb.addEventListener('change', updateCsvSelection);
-    });
-    document.getElementById('selectAllCsv')?.addEventListener('click', () => {
-      document.querySelectorAll('.csv-checkbox').forEach(cb => { cb.checked = true; });
-      updateCsvSelection();
-    });
-    document.getElementById('deselectAllCsv')?.addEventListener('click', () => {
-      document.querySelectorAll('.csv-checkbox').forEach(cb => { cb.checked = false; });
-      updateCsvSelection();
-    });
-    updateCsvSelection();
-
-    document.getElementById('btnUploadCsv')?.addEventListener('click', async () => {
-      const files = getCheckedValues('csv-checkbox');
+    function getSelectedCsvFiles() {
+      const section = document.getElementById('upload');
+      if (!section) return [];
+      return Array.from(section.querySelectorAll('.csv-checkbox:checked')).map(cb => cb.value);
+    }
+    async function runCsvUpload() {
+      const files = getSelectedCsvFiles();
       if (!files.length) { alert('Select at least one CSV file.'); return; }
-      const dry = document.getElementById('dry_run').checked;
+      const dryEl = document.getElementById('dry_run');
+      const dry = dryEl ? dryEl.checked : false;
       if (!dry && !confirm('Upload and verify ' + files.length + ' file(s)?')) return;
-
-      openProgress(dry ? 'Dry run' : 'Uploading userbases', files.length + ' file(s)');
-      try {
-        setProgress(20, 'Processing…');
-        const data = await postJson('/ajax/upload-userbases', { csv_files: files, dry_run: dry });
-        setProgress(70, data.message);
-        (data.results || []).forEach(r => {
-          const ok = r.ok;
-          appendLog(
-            (ok ? '✓ ' : '✗ ') + r.file + ' — local ' + r.local + ', import ' + r.import + ', stored ' + r.stored,
-            ok
-          );
-          if (r.errors?.length) r.errors.forEach(e => appendLog('  ' + e, false));
-        });
-        finishProgress(data.ok, data.message, true);
-      } catch (err) {
-        finishProgress(false, err.message, false);
+      const recheckEl = document.getElementById('upload_recheck');
+      const recheck = recheckEl ? recheckEl.checked : true;
+      let etaLabel = '';
+      if (!dry) {
+        try {
+          const est = await postJson('/ajax/upload-userbases/estimate', { csv_files: files, recheck });
+          etaLabel = est.eta_label || '';
+        } catch (_) {}
       }
+      openProgress(dry ? 'Dry run' : 'Uploading userbases',
+        files.length + ' file(s)' + (etaLabel ? ' · est. ' + etaLabel : ''));
+      try {
+        const data = await postJsonStream('/ajax/upload-userbases', { csv_files: files, dry_run: dry, recheck }, handleBulkStreamEvent);
+        finishProgress(!!data?.ok, data?.message || 'Done', !!data?.ok);
+      } catch (err) { finishProgress(false, err.message, false); }
+    }
+    function bindUploadTab() {
+      const section = document.getElementById('upload');
+      if (!section || section.dataset.bound === '1') return;
+      section.dataset.bound = '1';
+      section.addEventListener('change', (e) => {
+        if (e.target?.classList?.contains('csv-checkbox')) updateCsvSelection();
+      });
+      section.addEventListener('click', (e) => {
+        const t = e.target;
+        if (!t) return;
+        if (t.id === 'selectAllCsv') { e.preventDefault(); section.querySelectorAll('.csv-checkbox').forEach(cb => { cb.checked = true; }); updateCsvSelection(); return; }
+        if (t.id === 'deselectAllCsv') { e.preventDefault(); section.querySelectorAll('.csv-checkbox').forEach(cb => { cb.checked = false; }); updateCsvSelection(); return; }
+        if (t.id === 'btnUploadCsv') { e.preventDefault(); runCsvUpload(); return; }
+        const card = t.closest?.('.file-card');
+        if (card && t.type !== 'checkbox') {
+          e.preventDefault();
+          const cb = card.querySelector('.csv-checkbox');
+          if (cb) { cb.checked = !cb.checked; updateCsvSelection(); }
+        }
+      });
+      updateCsvSelection();
+    }
+    bindUploadTab();
+
+    /* =========================================================
+       CAMPAIGN CREATE BULK — PIPELINE REDESIGN
+    ========================================================= */
+    let createResources = null;   // cached API response
+    let resourcesLoaded = false;  // lazy-load flag
+    const workspaceRows = [];
+
+    function escHtml(s) {
+      return String(s || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function todayIsoDate() { return new Date().toISOString().slice(0, 10); }
+    function defaultCampaignName(groupName) { return 'PROD ' + groupName + ' ' + todayIsoDate(); }
+
+    /* ---- Picker helpers ---- */
+    function renderPickerList(containerId, items, checkboxClass, metaKey) {
+      const el = document.getElementById(containerId);
+      if (!el) return;
+      if (!items?.length) {
+        el.innerHTML = '<div class="empty-state" style="padding:16px;"><p>None in Gophish</p></div>';
+        return;
+      }
+      el.innerHTML = items.map(item => {
+        let metaHtml = '';
+        if (metaKey === 'num_users' && item.num_users != null) {
+          metaHtml = '<span class="meta">' + escHtml(String(item.num_users)) + ' users</span>';
+        }
+        return (
+          '<label class="picker-row" data-name="' + escHtml((item.name || '').toLowerCase()) + '">' +
+          '<input type="checkbox" class="' + checkboxClass + '" value="' + escHtml(item.name) +
+          '" data-id="' + escHtml(String(item.id)) +
+          '" data-users="' + escHtml(String(item.num_users || 0)) + '" />' +
+          '<span class="picker-label">' + escHtml(item.name) + metaHtml + '</span>' +
+          '</label>'
+        );
+      }).join('');
+    }
+    function filterPickerList(scrollId, query) {
+      const q = (query || '').trim().toLowerCase();
+      const scroll = document.getElementById(scrollId);
+      if (!scroll) return 0;
+      let visible = 0;
+      scroll.querySelectorAll('.picker-row').forEach(row => {
+        const show = !q || (row.getAttribute('data-name') || '').includes(q);
+        row.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+      return visible;
+    }
+    function bindPickerFilter(inputId, scrollId, countId, total) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      input.disabled = false;
+      const update = () => {
+        const vis = filterPickerList(scrollId, input.value);
+        const el = document.getElementById(countId);
+        if (el) el.textContent = vis + ' shown · ' + total + ' total';
+      };
+      input.oninput = update; update();
+    }
+
+    /* ---- Load resources (lazy, with TTL cache) ---- */
+    async function lazyLoadCreateResources() {
+      if (resourcesLoaded) return;
+      await loadCreateResources(false);
+    }
+    async function loadCreateResources(forceRefresh) {
+      const status = document.getElementById('createLoadStatus');
+      const btnReload = document.getElementById('btnReloadCreateResources');
+      if (status) { status.textContent = 'Loading…'; status.className = 'res-status-chip loading'; }
+      if (btnReload) btnReload.disabled = true;
+      try {
+        const url = '/ajax/campaign-create/resources' + (forceRefresh ? '?refresh=1' : '');
+        const res = await fetch(url);
+        const data = await parseJsonResponse(res);
+        if (!res.ok || !data.ok) throw new Error(data.message || res.statusText);
+        createResources = data;
+        resourcesLoaded = true;
+
+        const groups = data.groups || [];
+        const templates = data.templates || [];
+        const pages = data.pages || [];
+        const smtp = data.smtp_profiles || [];
+
+        renderPickerList('createGroupPicker', groups, 'create-group-cb', 'num_users');
+        renderPickerList('createTemplatePicker', templates, 'create-template-cb', null);
+        renderPickerList('createPagePicker', pages, 'create-page-cb', null);
+        renderPickerList('createSmtpPicker', smtp, 'create-smtp-cb', null);
+
+        bindPickerFilter('filterGroups', 'createGroupPicker', 'countGroups', groups.length);
+        bindPickerFilter('filterTemplates', 'createTemplatePicker', 'countTemplates', templates.length);
+        bindPickerFilter('filterPages', 'createPagePicker', 'countPages', pages.length);
+        bindPickerFilter('filterSmtp', 'createSmtpPicker', 'countSmtp', smtp.length);
+
+        // Populate bulk-apply selects
+        const populateBab = (id, items) => {
+          const sel = document.getElementById(id);
+          if (!sel) return;
+          sel.innerHTML = '<option value="">— select —</option>' +
+            items.map(x => '<option value="' + escHtml(x.name) + '">' + escHtml(x.name) + '</option>').join('');
+          sel.disabled = !items.length;
+        };
+        populateBab('babTemplate', templates);
+        populateBab('babPage', pages);
+        populateBab('babSmtp', smtp);
+        ['btnBulkApplyAll','btnBulkApplyIncomplete'].forEach(id => {
+          const b = document.getElementById(id);
+          if (b) b.disabled = false;
+        });
+
+        document.getElementById('btnAddGroupsToWorkspace').disabled = false;
+
+        if (status) {
+          const cachedLabel = data.cached ? ' (cached)' : '';
+          status.textContent = groups.length + ' groups · ' + templates.length + ' tpl · ' + pages.length + ' pages · ' + smtp.length + ' SMTP' + cachedLabel;
+          status.className = 'res-status-chip' + (data.cached ? ' cached' : '');
+        }
+        updateStepperState();
+        refreshWorkspace();
+      } catch (err) {
+        if (status) { status.textContent = 'Load failed: ' + err.message; status.className = 'res-status-chip'; }
+        resourcesLoaded = false;
+      } finally {
+        if (btnReload) btnReload.disabled = false;
+      }
+    }
+
+    document.getElementById('btnReloadCreateResources')?.addEventListener('click', () => loadCreateResources(true));
+    if (document.getElementById('campaign-create')?.classList.contains('active') && CONFIGURED) {
+      lazyLoadCreateResources();
+    }
+
+    /* ---- Stepper ---- */
+    function updateStepperState() {
+      const s1 = document.getElementById('ccStep1');
+      const s2 = document.getElementById('ccStep2');
+      const s3 = document.getElementById('ccStep3');
+      if (!s1) return;
+      const loaded = !!createResources;
+      const hasRows = workspaceRows.length > 0;
+      const allReady = hasRows && workspaceRows.every(r => workspaceRowReady(r));
+      s1.className = 'cc-step' + (loaded ? ' done' : ' active');
+      s2.className = 'cc-step' + (hasRows && allReady ? ' done' : hasRows ? ' active' : '');
+      s3.className = 'cc-step' + (allReady ? ' active' : '');
+    }
+
+    /* ---- Workspace row helpers ---- */
+    function workspaceRowReady(row) {
+      return !!(row.templateName && row.pageName && row.smtpName);
+    }
+
+    function getOptionList(items, selected) {
+      const blank = '<option value="">— select —</option>';
+      const opts = (items || []).map(n => {
+        const sel = n === selected ? ' selected' : '';
+        return '<option value="' + escHtml(n) + '"' + sel + '>' + escHtml(n) + '</option>';
+      }).join('');
+      return blank + opts;
+    }
+
+    function connectorArrow() {
+      return '<div class="ws-connector"><svg width="24" height="24" viewBox="0 0 24 24" fill="none">' +
+        '<path d="M5 12h14M14 6l6 6-6 6" stroke="rgba(212,175,55,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg></div>';
+    }
+
+    function nodeIcon(type) {
+      const icons = {
+        group:    '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+        template: '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 6h6M5 9h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+        page:     '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="1" width="12" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+        smtp:     '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M1 5l7 5 7-5" stroke="currentColor" stroke-width="1.5"/></svg>',
+      };
+      return icons[type] || '';
+    }
+
+    function renderPipelineRow(row, idx) {
+      const tplNames  = (createResources?.templates || []).map(x => x.name);
+      const pageNames = (createResources?.pages || []).map(x => x.name);
+      const smtpNames = (createResources?.smtp_profiles || []).map(x => x.name);
+
+      const tplSet  = row.templateName ? 'set' : 'missing';
+      const pageSet = row.pageName     ? 'set' : 'missing';
+      const smtpSet = row.smtpName     ? 'set' : 'missing';
+
+      const ready = workspaceRowReady(row);
+      const badgeHtml = ready
+        ? '<span class="ws-badge-ready ready">&#10003; Ready</span>'
+        : '<span class="ws-badge-ready incomplete">&#9675; Incomplete</span>';
+
+      return (
+        '<article class="ws-card ' + (ready ? 'ws-ready' : 'ws-incomplete') + '" data-idx="' + idx + '">' +
+
+        '<div class="ws-card-head">' +
+          '<span class="ws-card-title">Campaign <strong>#' + (idx + 1) + '</strong> &mdash; ' +
+            '<strong>' + escHtml(row.groupName) + '</strong>' +
+            ' <span class="badge" style="margin-left:4px;">' + escHtml(String(row.numUsers || 0)) + ' users</span>' +
+          '</span>' +
+          '<div style="display:flex;gap:8px;align-items:center;">' +
+            badgeHtml +
+            '<span class="ws-dup-warn' + (row.dupWarn ? ' visible' : '') + '" id="dupWarn' + idx + '">' +
+              '&#9888; Duplicate name' +
+            '</span>' +
+            '<button type="button" class="btn btn-danger ws-remove" data-idx="' + idx + '" style="padding:5px 10px;font-size:0.78rem;">&#10005; Remove</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="ws-name-wrap">' +
+          '<label>Campaign name</label>' +
+          '<input type="text" class="ws-campaign-name ws-name" data-idx="' + idx + '" value="' + escHtml(row.campaignName) + '" />' +
+        '</div>' +
+
+        '<div class="ws-pipeline">' +
+          // Group node (fixed)
+          '<div class="ws-node group-node">' +
+            '<div class="ws-node-icon">' + nodeIcon('group') + ' User group</div>' +
+            '<div class="ws-node-value">' + escHtml(row.groupName) + '</div>' +
+          '</div>' +
+          connectorArrow() +
+          // Template node
+          '<div class="ws-node ' + tplSet + '">' +
+            '<div class="ws-node-icon">' + nodeIcon('template') + ' Template</div>' +
+            '<div class="ws-node-value">' + (row.templateName ? escHtml(row.templateName) : 'Not set') + '</div>' +
+            '<select class="ws-node-select ws-template" data-idx="' + idx + '">' + getOptionList(tplNames, row.templateName) + '</select>' +
+          '</div>' +
+          connectorArrow() +
+          // Page node
+          '<div class="ws-node ' + pageSet + '">' +
+            '<div class="ws-node-icon">' + nodeIcon('page') + ' Landing page</div>' +
+            '<div class="ws-node-value">' + (row.pageName ? escHtml(row.pageName) : 'Not set') + '</div>' +
+            '<select class="ws-node-select ws-page" data-idx="' + idx + '">' + getOptionList(pageNames, row.pageName) + '</select>' +
+          '</div>' +
+          connectorArrow() +
+          // SMTP node
+          '<div class="ws-node ' + smtpSet + '">' +
+            '<div class="ws-node-icon">' + nodeIcon('smtp') + ' SMTP profile</div>' +
+            '<div class="ws-node-value">' + (row.smtpName ? escHtml(row.smtpName) : 'Not set') + '</div>' +
+            '<select class="ws-node-select ws-smtp" data-idx="' + idx + '">' + getOptionList(smtpNames, row.smtpName) + '</select>' +
+          '</div>' +
+        '</div>' + // .ws-pipeline
+
+        '</article>'
+      );
+    }
+
+    // Check for duplicate campaign names within current workspace
+    function markDuplicates() {
+      const seen = new Map();
+      workspaceRows.forEach((row, idx) => {
+        const key = (row.campaignName || defaultCampaignName(row.groupName)).trim().toLowerCase();
+        row.dupWarn = seen.has(key);
+        if (!seen.has(key)) seen.set(key, idx);
+      });
+    }
+
+    function refreshWorkspace() {
+      const empty = document.getElementById('workspaceEmpty');
+      const cards = document.getElementById('workspaceCards');
+      const count = document.getElementById('workspaceCount');
+      if (!cards) return;
+
+      markDuplicates();
+
+      if (!workspaceRows.length) {
+        if (empty) empty.style.display = 'block';
+        cards.style.display = 'none';
+        cards.innerHTML = '';
+        if (count) count.textContent = '0 in workspace';
+        updateStickyBar();
+        updateStepperState();
+        return;
+      }
+
+      if (empty) empty.style.display = 'none';
+      cards.style.display = 'flex';
+      cards.innerHTML = workspaceRows.map((row, idx) => renderPipelineRow(row, idx)).join('');
+
+      // Bind events for this render pass
+      cards.querySelectorAll('.ws-template').forEach(sel => {
+        sel.addEventListener('change', () => {
+          const idx = +sel.dataset.idx;
+          workspaceRows[idx].templateName = sel.value;
+          // Targeted re-render of only this card
+          const article = cards.querySelector('[data-idx="' + idx + '"]');
+          if (article) { article.outerHTML = renderPipelineRow(workspaceRows[idx], idx); rebindCard(cards, idx); }
+          else refreshWorkspace();
+          updateStickyBar(); updateStepperState();
+        });
+      });
+      cards.querySelectorAll('.ws-page').forEach(sel => {
+        sel.addEventListener('change', () => {
+          const idx = +sel.dataset.idx;
+          workspaceRows[idx].pageName = sel.value;
+          const article = cards.querySelector('[data-idx="' + idx + '"]');
+          if (article) { article.outerHTML = renderPipelineRow(workspaceRows[idx], idx); rebindCard(cards, idx); }
+          else refreshWorkspace();
+          updateStickyBar(); updateStepperState();
+        });
+      });
+      cards.querySelectorAll('.ws-smtp').forEach(sel => {
+        sel.addEventListener('change', () => {
+          const idx = +sel.dataset.idx;
+          workspaceRows[idx].smtpName = sel.value;
+          const article = cards.querySelector('[data-idx="' + idx + '"]');
+          if (article) { article.outerHTML = renderPipelineRow(workspaceRows[idx], idx); rebindCard(cards, idx); }
+          else refreshWorkspace();
+          updateStickyBar(); updateStepperState();
+        });
+      });
+      cards.querySelectorAll('.ws-name').forEach(inp => {
+        inp.addEventListener('input', () => {
+          workspaceRows[+inp.dataset.idx].campaignName = inp.value;
+          markDuplicates();
+          workspaceRows.forEach((_, i) => {
+            const warn = document.getElementById('dupWarn' + i);
+            if (warn) warn.classList.toggle('visible', !!workspaceRows[i].dupWarn);
+          });
+        });
+      });
+      cards.querySelectorAll('.ws-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          workspaceRows.splice(+btn.dataset.idx, 1);
+          refreshWorkspace();
+        });
+      });
+
+      if (count) {
+        const ready = workspaceRows.filter(workspaceRowReady).length;
+        count.textContent = workspaceRows.length + ' in workspace · ' + ready + ' ready';
+      }
+      updateStickyBar();
+      updateStepperState();
+    }
+
+    // Rebind a single re-rendered card (avoids full redraw)
+    function rebindCard(cards, idx) {
+      const article = cards.querySelector('[data-idx="' + idx + '"]');
+      if (!article) return;
+      article.querySelector('.ws-template')?.addEventListener('change', function() {
+        workspaceRows[idx].templateName = this.value;
+        article.outerHTML = renderPipelineRow(workspaceRows[idx], idx); rebindCard(cards, idx);
+        updateStickyBar(); updateStepperState();
+      });
+      article.querySelector('.ws-page')?.addEventListener('change', function() {
+        workspaceRows[idx].pageName = this.value;
+        article.outerHTML = renderPipelineRow(workspaceRows[idx], idx); rebindCard(cards, idx);
+        updateStickyBar(); updateStepperState();
+      });
+      article.querySelector('.ws-smtp')?.addEventListener('change', function() {
+        workspaceRows[idx].smtpName = this.value;
+        article.outerHTML = renderPipelineRow(workspaceRows[idx], idx); rebindCard(cards, idx);
+        updateStickyBar(); updateStepperState();
+      });
+      article.querySelector('.ws-name')?.addEventListener('input', function() {
+        workspaceRows[idx].campaignName = this.value;
+        markDuplicates();
+        workspaceRows.forEach((_, i) => {
+          const warn = document.getElementById('dupWarn' + i);
+          if (warn) warn.classList.toggle('visible', !!workspaceRows[i].dupWarn);
+        });
+      });
+      article.querySelector('.ws-remove')?.addEventListener('click', () => {
+        workspaceRows.splice(idx, 1);
+        refreshWorkspace();
+      });
+    }
+
+    /* ---- Sticky bar ---- */
+    function updateStickyBar() {
+      const bar = document.getElementById('createStickyBar');
+      const readiness = document.getElementById('stickyReadiness');
+      const btnCreate = document.getElementById('btnCreateCampaigns');
+      const btnClear  = document.getElementById('stickyBtnClear');
+      if (!bar) return;
+
+      const total = workspaceRows.length;
+      const ready = workspaceRows.filter(workspaceRowReady).length;
+      const incomplete = total - ready;
+      const hasDup = workspaceRows.some(r => r.dupWarn);
+
+      const inCC = document.getElementById('campaign-create')?.classList.contains('active');
+      bar.classList.toggle('hidden', !inCC || total === 0);
+
+      if (readiness) {
+        readiness.innerHTML =
+          '<span class="tot">' + total + ' in workspace</span> &nbsp;·&nbsp; ' +
+          '<span class="rdy">' + ready + ' ready</span>' +
+          (incomplete ? ' &nbsp;·&nbsp; <span class="inc">' + incomplete + ' incomplete</span>' : '');
+      }
+      if (btnCreate) btnCreate.disabled = total === 0 || ready !== total || hasDup;
+      if (btnClear)  btnClear.style.display = total > 0 ? 'inline-flex' : 'none';
+    }
+
+    /* ---- Add groups to workspace ---- */
+    document.getElementById('btnAddGroupsToWorkspace')?.addEventListener('click', () => {
+      const checked = document.querySelectorAll('.create-group-cb:checked');
+      if (!checked.length) { alert('Select at least one user group.'); return; }
+      const existing = new Set(workspaceRows.map(r => r.groupName));
+      let added = 0;
+      const defaultTpl  = document.getElementById('babTemplate')?.value || createResources?.templates?.[0]?.name || '';
+      const defaultPage = document.getElementById('babPage')?.value  || createResources?.pages?.[0]?.name  || '';
+      const defaultSmtp = document.getElementById('babSmtp')?.value  || createResources?.smtp_profiles?.[0]?.name || '';
+      checked.forEach(cb => {
+        const name = cb.value;
+        if (existing.has(name)) return;
+        workspaceRows.push({
+          groupId: cb.dataset.id, groupName: name,
+          numUsers: cb.dataset.users || '0',
+          templateName: defaultTpl, pageName: defaultPage, smtpName: defaultSmtp,
+          campaignName: defaultCampaignName(name), dupWarn: false,
+        });
+        existing.add(name); added++;
+      });
+      if (!added) alert('Selected groups are already in the workspace.');
+      refreshWorkspace();
     });
+
+    /* ---- Bulk apply bar ---- */
+    document.getElementById('btnBulkApplyAll')?.addEventListener('click', () => {
+      const tpl  = document.getElementById('babTemplate')?.value;
+      const page = document.getElementById('babPage')?.value;
+      const smtp = document.getElementById('babSmtp')?.value;
+      if (!tpl && !page && !smtp) { alert('Select at least one value in the bulk-apply bar.'); return; }
+      workspaceRows.forEach(row => {
+        if (tpl)  row.templateName = tpl;
+        if (page) row.pageName     = page;
+        if (smtp) row.smtpName     = smtp;
+      });
+      refreshWorkspace();
+    });
+    document.getElementById('btnBulkApplyIncomplete')?.addEventListener('click', () => {
+      const tpl  = document.getElementById('babTemplate')?.value;
+      const page = document.getElementById('babPage')?.value;
+      const smtp = document.getElementById('babSmtp')?.value;
+      workspaceRows.forEach(row => {
+        if (tpl  && !row.templateName) row.templateName = tpl;
+        if (page && !row.pageName)     row.pageName     = page;
+        if (smtp && !row.smtpName)     row.smtpName     = smtp;
+      });
+      refreshWorkspace();
+    });
+
+    /* ---- Clear workspace ---- */
+    function clearWorkspace() {
+      if (workspaceRows.length && !confirm('Clear all workspace rows?')) return;
+      workspaceRows.length = 0;
+      refreshWorkspace();
+    }
+    document.getElementById('btnClearWorkspace')?.addEventListener('click', clearWorkspace);
+    document.getElementById('stickyBtnClear')?.addEventListener('click', clearWorkspace);
+
+    /* ---- Create campaigns ---- */
+    document.getElementById('btnCreateCampaigns')?.addEventListener('click', async () => {
+      if (!workspaceRows.length) { alert('Workspace is empty.'); return; }
+      const hasDup = workspaceRows.some(r => r.dupWarn);
+      if (hasDup) { alert('Resolve duplicate campaign names (shown in red) before creating.'); return; }
+      const missing = workspaceRows.filter(r => !workspaceRowReady(r));
+      if (missing.length) { alert('Each campaign needs template, landing page, and sending profile.'); return; }
+      const url = document.getElementById('createPhishingUrl')?.value?.trim() || 'http://localhost';
+      const summary = workspaceRows.map(r =>
+        '• ' + (r.campaignName || defaultCampaignName(r.groupName)).trim() +
+        '\n  group: ' + r.groupName + ' · SMTP: ' + r.smtpName
+      ).join('\n\n');
+      if (!confirm(
+        'Create ' + workspaceRows.length + ' campaign(s)?\n\n' +
+        '\u26A0 These campaigns launch IMMEDIATELY \u2014 phishing emails will be sent ' +
+        'to all recipients right away.\n\n' + summary
+      )) return;
+
+      openProgress('Creating campaigns', workspaceRows.length + ' in workspace');
+      try {
+        const data = await postJsonStream(
+          '/ajax/campaign-create/create',
+          {
+            phishing_url: url,
+            recheck: true,
+            items: workspaceRows.map(r => ({
+              group_name: r.groupName,
+              campaign_name: (r.campaignName || defaultCampaignName(r.groupName)).trim(),
+              template_name: r.templateName,
+              page_name: r.pageName,
+              smtp_name: r.smtpName,
+            })),
+          },
+          handleBulkStreamEvent
+        );
+        if (data?.ok) { workspaceRows.length = 0; refreshWorkspace(); }
+        finishProgress(!!data?.ok, data?.message || 'Done', !!data?.ok);
+      } catch (err) { finishProgress(false, err.message, false); }
+    });
+
   </script>
 </body>
 </html>

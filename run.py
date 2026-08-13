@@ -5,6 +5,9 @@ Cross-platform launcher for Gophish-Support (same as ./run.sh).
 Usage:
   python run.py
   python3 run.py
+
+On Windows, this intentionally avoids `Activate.ps1` so you do not
+need to change execution policy or trust PowerShell script publishers.
 """
 
 from __future__ import annotations

@@ -1,27 +1,17 @@
 #!/usr/bin/env python3
+"""Compatibility entrypoint. Delegates to main.py.
+
+Prefer: python main.py
 """
-Start the bulk manager: creates venv, installs deps, launches the web UI.
 
-Configure Gophish URL and API key in the browser at http://127.0.0.1:5000
-"""
+from __future__ import annotations
 
-from bootstrap import bootstrap
+import os
+import sys
 
-bootstrap()
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import gophish_api  # noqa: E402
-
-gophish_api._load_dotenv()
-
-if gophish_api.configured():
-    print(f"[*] Pre-loaded credentials from .env -> {gophish_api.GOPHISH_URL}")
-else:
-    print("[*] No .env credentials — set URL and API key in the web UI.")
-
-print("[*] Gophish-Support: http://127.0.0.1:5000")
-print("    Open Settings tab to connect to your Gophish server.")
-
-from gophish_manager import app  # noqa: E402
+from main import main
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    raise SystemExit(main())

@@ -4,14 +4,14 @@ Bulk-upload Gophish userlists from prod/input/ CSV files and verify counts.
 For each CSV:
   1. Count rows locally (UTF-8)
   2. Import via /api/import/group (Gophish CSV parser — catches encoding issues)
-  3. Create group via POST /api/groups/
+  3. Create group via POST /api/groups/ (name = CSV filename without .csv)
   4. Download group via GET /api/groups/{id} and compare user counts + emails
 
 Usage:
   set GOPHISH_API_KEY=your-key
   python bulk_upload_userbases.py
   python bulk_upload_userbases.py --input-dir ./input --dry-run
-  python bulk_upload_userbases.py --verify-only --group-prefix "BulkUpload:"
+  python bulk_upload_userbases.py --verify-only
 """
 
 from __future__ import annotations
@@ -21,13 +21,13 @@ import csv
 import os
 import sys
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Any, Callable, Dict, Generator, List, Optional, Set, Tuple
 
 import gophish_api
+import gophish_bulk_config as bulk_cfg
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_INPUT_DIR = os.path.join(SCRIPT_DIR, "input")
-GROUP_PREFIX = "BulkUpload:"
 
 
 @dataclass
@@ -80,18 +80,39 @@ def normalize_targets(targets: List[dict]) -> Set[str]:
     }
 
 
-def group_name_for_csv(csv_path: str, prefix: str) -> str:
-    base = os.path.splitext(os.path.basename(csv_path))[0]
-    return f"{prefix}{base}"
+def group_name_for_csv(csv_path: str) -> str:
+    """Gophish group name = CSV basename without extension (no prefix)."""
+    return os.path.splitext(os.path.basename(csv_path))[0]
+
+
+ProgressCallback = Callable[[Dict[str, Any]], None]
+
+
+def _emit(on_progress: Optional[ProgressCallback], event: Dict[str, Any]) -> None:
+    if on_progress:
+        on_progress(event)
+
+
+def upload_result_dict(r: UploadResult) -> dict:
+    return {
+        "file": r.csv_file,
+        "group": r.group_name,
+        "ok": r.ok,
+        "local": r.local_count,
+        "import": r.import_count,
+        "stored": r.stored_count,
+        "errors": r.errors,
+        "recheck": getattr(r, "recheck", False),
+    }
 
 
 def process_csv(
     csv_path: str,
     *,
-    prefix: str,
     dry_run: bool,
+    on_progress: Optional[ProgressCallback] = None,
 ) -> UploadResult:
-    name = group_name_for_csv(csv_path, prefix)
+    name = group_name_for_csv(csv_path)
     local_count, local_emails = count_csv_rows_local(csv_path)
     result = UploadResult(
         csv_file=os.path.basename(csv_path),
@@ -111,11 +132,17 @@ def process_csv(
         result.ok = True
         return result
 
+    def tick(phase: str) -> None:
+        _emit(on_progress, {"type": "phase", "file": result.csv_file, "phase": phase})
+
     try:
+        tick("import")
         imported = gophish_api.import_group_csv(csv_path, expected_rows=local_count)
     except Exception as exc:
-        result.errors.append(f"API import failed: {exc}")
+        result.errors.append(f"API import failed: {gophish_api.format_api_error(exc)}")
         return result
+
+    gophish_api.cooldown(on_tick=lambda s, r: _emit(on_progress, {"type": "cooldown", "seconds": s, "reason": r}))
 
     result.import_count = len(imported)
     if result.import_count != local_count:
@@ -132,10 +159,13 @@ def process_csv(
         result.missing_emails = missing_at_import[:10]
 
     try:
+        tick("create_group")
         group = gophish_api.create_group(name, imported)
     except Exception as exc:
-        result.errors.append(f"Create group failed: {exc}")
+        result.errors.append(f"Create group failed: {gophish_api.format_api_error(exc)}")
         return result
+
+    gophish_api.cooldown(on_tick=lambda s, r: _emit(on_progress, {"type": "cooldown", "seconds": s, "reason": r}))
 
     result.group_id = group.get("id")
     if not result.group_id:
@@ -143,12 +173,15 @@ def process_csv(
         return result
 
     try:
+        tick("verify")
         downloaded = gophish_api.get_group(
             result.group_id, target_count=result.import_count
         )
     except Exception as exc:
-        result.errors.append(f"Download group failed: {exc}")
+        result.errors.append(f"Download group failed: {gophish_api.format_api_error(exc)}")
         return result
+
+    gophish_api.cooldown(on_tick=lambda s, r: _emit(on_progress, {"type": "cooldown", "seconds": s, "reason": r}))
 
     stored = downloaded.get("targets") or []
     result.stored_count = len(stored)
@@ -177,13 +210,21 @@ def process_csv(
     return result
 
 
-def verify_existing_groups(prefix: str) -> List[UploadResult]:
-    """Re-download groups created with the bulk-upload prefix and report counts."""
+def verify_existing_groups(input_dir: str = DEFAULT_INPUT_DIR) -> List[UploadResult]:
+    """Re-download groups whose names match CSV stems in input_dir."""
+    try:
+        csv_stems = {
+            os.path.splitext(os.path.basename(p))[0]
+            for p in list_csv_files(input_dir)
+        }
+    except FileNotFoundError:
+        return []
+
     groups = gophish_api.api_get("/groups/")
     results: List[UploadResult] = []
     for g in groups:
         name = g.get("name") or ""
-        if not name.startswith(prefix):
+        if name not in csv_stems:
             continue
         gid = g.get("id")
         full = gophish_api.get_group(gid)
@@ -254,13 +295,148 @@ def resolve_csv_paths(input_dir: str, selected_names: List[str]) -> List[str]:
     return sorted(paths)
 
 
+def estimate_upload_eta(
+    input_dir: str,
+    selected_files: List[str],
+    *,
+    recheck: bool = True,
+) -> dict:
+    paths = resolve_csv_paths(input_dir, selected_files)
+    if not paths:
+        return {"eta_seconds": 0, "eta_label": "0s", "files": 0}
+    seconds = bulk_cfg.estimate_upload_total_seconds(
+        paths, count_csv_rows_local, recheck=recheck
+    )
+    return {
+        "eta_seconds": int(seconds),
+        "eta_label": bulk_cfg.format_eta(seconds),
+        "files": len(paths),
+        "cooldown_sec": bulk_cfg.COOLDOWN_SEC,
+        "cooldown_final_sec": bulk_cfg.COOLDOWN_FINAL_SEC,
+        "bulk_timeout_max": bulk_cfg.BULK_TIMEOUT_MAX,
+    }
+
+
+def run_bulk_upload_iter(
+    input_dir: str = DEFAULT_INPUT_DIR,
+    *,
+    dry_run: bool = False,
+    selected_files: Optional[List[str]] = None,
+    recheck: bool = True,
+) -> Generator[Dict[str, Any], None, None]:
+    """Yield progress events (NDJSON-friendly) including recheck pass and final cooldown."""
+    if not gophish_api.configured() and not dry_run:
+        yield {"type": "error", "message": "Not connected to Gophish."}
+        return
+
+    if selected_files:
+        csv_files = resolve_csv_paths(input_dir, selected_files)
+        if not csv_files:
+            yield {"type": "error", "message": "No valid CSV files selected."}
+            return
+    else:
+        csv_files = list_csv_files(input_dir)
+
+    total = len(csv_files)
+    eta = bulk_cfg.estimate_upload_total_seconds(
+        csv_files, count_csv_rows_local, recheck=recheck and not dry_run
+    )
+    yield {
+        "type": "start",
+        "total": total,
+        "eta_seconds": int(eta),
+        "eta_label": bulk_cfg.format_eta(eta),
+        "dry_run": dry_run,
+        "recheck": recheck and not dry_run,
+        "group_naming": "csv_stem",
+    }
+
+    results: List[UploadResult] = []
+    started = __import__("time").time()
+
+    for idx, path in enumerate(csv_files, start=1):
+        elapsed = __import__("time").time() - started
+        remaining = max(0, eta - elapsed)
+        yield {
+            "type": "progress",
+            "index": idx,
+            "total": total,
+            "file": os.path.basename(path),
+            "eta_seconds": int(remaining),
+            "eta_label": bulk_cfg.format_eta(remaining),
+        }
+
+        file_events: List[Dict[str, Any]] = []
+
+        def capture(ev: Dict[str, Any]) -> None:
+            ev = dict(ev)
+            ev.setdefault("index", idx)
+            ev.setdefault("total", total)
+            file_events.append(ev)
+
+        result = process_csv(
+            path,
+            dry_run=dry_run,
+            on_progress=capture,
+        )
+        for ev in file_events:
+            yield ev
+        results.append(result)
+        yield {"type": "file_done", "result": upload_result_dict(result)}
+
+    failed = [r for r in results if not r.ok]
+    if recheck and not dry_run and failed:
+        yield {
+            "type": "recheck_start",
+            "count": len(failed),
+            "cooldown_seconds": bulk_cfg.COOLDOWN_FINAL_SEC,
+            "message": f"Rechecking {len(failed)} failed file(s) after server cooldown",
+        }
+        yield {
+            "type": "cooldown",
+            "seconds": bulk_cfg.COOLDOWN_FINAL_SEC,
+            "reason": "recheck cooldown — letting Gophish recover",
+        }
+        bulk_cfg.cooldown_final()
+        for r in failed:
+            path = os.path.join(input_dir, r.csv_file)
+            if not os.path.isfile(path):
+                continue
+            setattr(r, "recheck", True)
+            retry = process_csv(path, dry_run=False)
+            retry.recheck = True
+            for i, old in enumerate(results):
+                if old.csv_file == retry.csv_file:
+                    results[i] = retry
+                    break
+            yield {"type": "file_done", "result": upload_result_dict(retry), "recheck": True}
+
+    if not dry_run:
+        yield {
+            "type": "cooldown",
+            "seconds": bulk_cfg.COOLDOWN_FINAL_SEC,
+            "reason": "final server cooldown",
+        }
+        bulk_cfg.cooldown_final()
+
+    passed = sum(1 for r in results if r.ok)
+    yield {
+        "type": "complete",
+        "ok": passed == len(results),
+        "message": f"Verified {passed}/{len(results)} file(s).",
+        "passed": passed,
+        "total": len(results),
+        "results": [upload_result_dict(r) for r in results],
+    }
+
+
 def run_bulk_upload(
     input_dir: str = DEFAULT_INPUT_DIR,
     *,
-    prefix: str = GROUP_PREFIX,
     dry_run: bool = False,
     verify_only: bool = False,
     selected_files: Optional[List[str]] = None,
+    recheck: bool = True,
 ) -> Tuple[List[UploadResult], int]:
     if not gophish_api.configured() and not dry_run:
         raise SystemExit(
@@ -268,9 +444,9 @@ def run_bulk_upload(
         )
 
     if verify_only:
-        results = verify_existing_groups(prefix)
+        results = verify_existing_groups(input_dir)
         if not results:
-            print(f"No groups found with prefix '{prefix}'")
+            print("No groups found with names matching CSV files in input dir")
             return [], 1
         return results, print_report(results)
 
@@ -284,8 +460,27 @@ def run_bulk_upload(
     if dry_run:
         print("(dry-run: no API writes)")
 
-    results = [process_csv(p, prefix=prefix, dry_run=dry_run) for p in csv_files]
-    return results, print_report(results)
+    results: List[UploadResult] = []
+    for event in run_bulk_upload_iter(
+        input_dir,
+        dry_run=dry_run,
+        selected_files=selected_files,
+        recheck=recheck,
+    ):
+        if event.get("type") == "complete":
+            return [
+                UploadResult(
+                    csv_file=r["file"],
+                    group_name=r["group"],
+                    local_count=r["local"],
+                    import_count=r["import"],
+                    stored_count=r["stored"],
+                    ok=r["ok"],
+                    errors=r.get("errors") or [],
+                )
+                for r in event.get("results") or []
+            ], 0 if event.get("ok") else 1
+    return results, 1
 
 
 def main() -> None:
@@ -298,11 +493,6 @@ def main() -> None:
         help=f"Directory of CSV files (default: {DEFAULT_INPUT_DIR})",
     )
     parser.add_argument(
-        "--prefix",
-        default=GROUP_PREFIX,
-        help=f"Group name prefix (default: {GROUP_PREFIX})",
-    )
-    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Only parse local CSVs, do not call Gophish API",
@@ -310,12 +500,11 @@ def main() -> None:
     parser.add_argument(
         "--verify-only",
         action="store_true",
-        help="Re-fetch existing groups with the given prefix",
+        help="Re-fetch groups whose names match CSV filenames in input dir",
     )
     args = parser.parse_args()
     _, code = run_bulk_upload(
         args.input_dir,
-        prefix=args.prefix,
         dry_run=args.dry_run,
         verify_only=args.verify_only,
     )
